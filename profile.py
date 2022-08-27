@@ -24,7 +24,7 @@ request = pc.makeRequestRSpec()
 
 # Variable number of nodes.
 pc.defineParameter("nodeCount", "Number of Nodes", portal.ParameterType.INTEGER, 1,
-                   longDescription="Enter the number of FPGA nodes. Maximum is 8.")
+                   longDescription="Enter the number of FPGA nodes. Maximum is 16.")
 
 # Pick your image.
 imageList = [
@@ -76,8 +76,8 @@ params = pc.bindParameters()
 
 # Check parameter validity.
 
-if params.nodeCount < 1 or params.nodeCount > 8:
-    pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 8.", ["nodeCount"]))
+if params.nodeCount < 1 or params.nodeCount > 16:
+    pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 16.", ["nodeCount"]))
     pass
 if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD" and params.toolVersion == "2020.1":
     pc.reportError(portal.ParameterError("OS and tool version mismatch.", ["osImage"]))
