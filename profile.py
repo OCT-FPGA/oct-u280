@@ -28,26 +28,19 @@ pc.defineParameter("nodeCount", "Number of Nodes", portal.ParameterType.INTEGER,
 
 # Pick your image.
 imageList = [
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),    
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-STD', 'UBUNTU 18.04'), 
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU16-64-STD', 'UBUNTU 16.04'),
-    #('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD', 'CENTOS 8.4'),
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD', 'CENTOS 8.4'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS7-64-STD', 'CENTOS 7.9')] 
 
-
-toolVersion = [('2021.1'), 
+toolVersion = [('2022.1'),
+               ('2021.1'), 
                ('2020.2.1'), 
                ('2020.2'), 
                ('2020.1.1'),
                ('2020.1'),
-               ('Do not install tools')] 
-
-#dockerImToolVersion =  [('2021.1'), 
-#               ('2020.2'), 
-#               ('2020.1')]  
-
-#dockerImOSVersion =  [('centos-7'), 
-#               ('ubuntu-16.04'), 
-#               ('ubuntu-18.04')]                
+               ('Do not install tools')]      
                    
 pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
@@ -82,22 +75,7 @@ pc.defineParameter("tempFileSystemMount", "Temporary Filesystem Mount Point",
 pc.defineParameter("createDocker",  "Install Docker",
                    portal.ParameterType.BOOLEAN, False,
                    advanced=True,
-                   longDescription="Install docker") 
-
-#pc.defineParameter("installFINNdeps",  "Install FINN Dependencies",
-#                   portal.ParameterType.BOOLEAN, False,
-#                   advanced=True,
-#                   longDescription="Install finn dependencies") 
-
-                   
-#pc.defineParameter("dockerImToolVersion", "Docker Image Tool Version",portal.ParameterType.STRING, 
-#                   dockerImToolVersion[0], dockerImToolVersion,
-#                   advanced=True,
-#                   longDescription="Docker image tool version")    
-#pc.defineParameter("dockerImOSVersion", "Docker Image OS",portal.ParameterType.STRING, 
-#                   dockerImOSVersion[0], dockerImOSVersion,
-#                   advanced=True,
-#                   longDescription="Docker image OS")                      
+                   longDescription="Install docker")       
                    
 # Retrieve the values the user specifies during instantiation.
 params = pc.bindParameters()        
@@ -110,6 +88,9 @@ if params.nodeCount < 1 or params.nodeCount > 8:
 if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD" and params.toolVersion == "2020.1":
     pc.reportError(portal.ParameterError("OS and tool version mismatch.", ["osImage"]))
     pass
+if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD" and params.toolVersion != "2022.1":
+    pc.reportError(portal.ParameterError("OS and tool version mismatch.", ["osImage"]))
+    pass
   
 pc.verifyParameters()
 
@@ -120,16 +101,10 @@ for i in range(params.nodeCount):
     # Create a node and add it to the request
     name = "node" + str(i)
     node = request.RawPC(name)
-    # host_iface1 = node.addInterface()
-    # host_iface1.component_id = "eth2"
-    # lan.addInterface(host_iface1)
-    # ip_addr = "192.168.1." + str(i+10)
-    # host_iface1.addAddress(pg.IPv4Address(ip_addr, "255.255.255.0"))
     node.disk_image = params.osImage
     # Assign to the node hosting the FPGA.
     node.hardware_type = "fpga-alveo"
     node.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
-    # node.addService(pg.Install(url="https://github.com/OCT-FPGA/cloudlab-post-boot/archive/refs/heads/master.tar.gz", path="/local/"))
     
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
@@ -144,12 +119,6 @@ for i in range(params.nodeCount):
     
     if params.toolVersion != "Do not install tools":
         node.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
-        pass
-    if params.createDocker:
-        node.addService(pg.Execute(shell="bash", command="sudo /local/repository/docker-install.sh " + ">> /local/repository/docker_log.txt"))
-        pass
-        #node.addService(pg.Execute(shell="bash", command="sudo /local/repository/run.sh " + "-v " + params.dockerImToolVersion + " -o " + params.dockerImOSVersion + " >> /local/repository/dockerimage_log.txt"))
-    #if params.installFINNdeps:
-    #    node.addService(pg.Execute(shell="bash", command="sudo /local/repository/finn-deps-install.sh " + ">> /local/repository/finn_log.txt")) 
+        pass 
     pass
 pc.printRequestRSpec(request)
