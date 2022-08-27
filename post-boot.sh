@@ -102,7 +102,11 @@ install_u280_shell() {
 
 flash_card() {
     echo "Flash Card(s). "
-    /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA --force
+    if [[ "$TOOLVERSION" == "2022.1" ]]; then
+        /opt/xilinx/xrt/bin/xbmgmt program --base --device 0000:3b:00.0
+    else
+        /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA --force
+    fi
 }
 
 detect_cards() {
