@@ -190,15 +190,13 @@ if [ ! -f ~/boot_flag ]; then
         echo "Shell is already up to date. Cold reboot not required."
         touch ~/boot_flag
     else
-        echo "FPGA shell could not be verified. Cold reboot required."
-        $SCRIPT_PATH/cold-boot-init.sh &
+        echo "FPGA shell could not be verified."
+        exit 1
     fi
     echo "Done running startup script."
     exit 0
 else
     echo "Rebooted the node."
     #This is only supposed to update the SC since the shell is already updated.
-    if [[ "$TOOLVERSION" != "2022.1" ]]; then
-        /opt/xilinx/xrt/bin/xbmgmt flash --update --force
-    fi
+    /opt/xilinx/xrt/bin/xbmgmt flash --update --force
 fi
