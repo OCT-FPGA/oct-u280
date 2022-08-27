@@ -68,11 +68,19 @@ check_xrt() {
 }
 
 check_requested_shell() {
-    SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$DSA"`    
+    if [[ "$TOOLVERSION" == "2022.1" ]]; then 
+        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$DSA"`
+    else
+        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$DSA"`
+    fi
 }
 
 check_factory_shell() {
-    SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$FACTORY_SHELL"`    
+    if [[ "$TOOLVERSION" == "2022.1" ]]; then   
+        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$FACTORY_SHELL"`
+    else
+        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$FACTORY_SHELL"`
+    fi
 }
 
 install_u280_shell() {
