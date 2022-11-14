@@ -51,7 +51,7 @@ pc.defineParameter("osImage", "Select Image",
                    imageList[0], imageList,
                    longDescription="Supported operating systems are Ubuntu and CentOS.")                    
 pc.defineParameter("enable40ginterface", "Enable 40G Network Interface",
-                   portal.Parametertype.BOOLEAN, False,
+                   portal.ParameterType.BOOLEAN, False,
                    advanced=True,
                    longDescription="Enable the 40G NIC on the host for FPGA-to-host experiments.")
 
