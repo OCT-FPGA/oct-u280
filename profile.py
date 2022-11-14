@@ -91,15 +91,14 @@ if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-S
 pc.verifyParameters()
 
 if params.enable40ginterface == True:
-    lan = request.LAN()
-
-if params.nodeCount > 1:
-    if params.nodeCount == 2:
-        lan = request.Link()
-    else:
-        lan = request.LAN()
-        pass
-    pass   
+    if params.nodeCount > 1:
+        if params.nodeCount == 2:
+            lan = request.Link()
+        else:
+            lan = request.LAN()
+            pass
+        pass   
+    pass
 # Process nodes, adding to FPGA network
 for i in range(params.nodeCount):
     # Create a node and add it to the request
