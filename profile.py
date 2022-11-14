@@ -52,7 +52,7 @@ pc.defineParameter("osImage", "Select Image",
                    longDescription="Supported operating systems are Ubuntu and CentOS.")                    
 pc.defineParameter("enable40ginterface", "Enable 40G Network Interface",
                    portal.ParameterType.BOOLEAN, False,
-                   advanced=True,
+                   advanced=False,
                    longDescription="Enable the 40G NIC on the host for FPGA-to-host experiments.")
 
 # Optional ephemeral blockstore
@@ -81,7 +81,7 @@ params = pc.bindParameters()
 
 # Check parameter validity.
 
-if params.nodeCount < 1 or params.nodeCount > 16:
+if params.nodeCount < 1 or params.nodeCount > 8:
     pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 16.", ["nodeCount"]))
     pass
 if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD" and params.toolVersion == "2020.1":
