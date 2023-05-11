@@ -28,18 +28,10 @@ pc.defineParameter("nodeCount", "Number of Nodes", portal.ParameterType.INTEGER,
 
 # Pick your image.
 imageList = [
-    #('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),    
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-STD', 'UBUNTU 18.04'), 
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU16-64-STD', 'UBUNTU 16.04'),
-    #('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD', 'CENTOS 8.4'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS7-64-STD', 'CENTOS 7.9')] 
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),    
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD', 'CENTOS 8.4')] 
 
-toolVersion = [#('2022.1'),
-               ('2021.1'), 
-               ('2020.2.1'), 
-               ('2020.2'), 
-               ('2020.1.1'),
-               ('2020.1'),
+toolVersion = [('2022.2'),
                ('Do not install tools')]      
                    
 pc.defineParameter("toolVersion", "Tool Version",
@@ -82,10 +74,7 @@ params = pc.bindParameters()
 # Check parameter validity.
 
 if params.nodeCount < 1 or params.nodeCount > 8:
-    pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 16.", ["nodeCount"]))
-    pass
-if params.osImage == "urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8-64-STD" and params.toolVersion == "2020.1":
-    pc.reportError(portal.ParameterError("OS and tool version mismatch.", ["osImage"]))
+    pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 8.", ["nodeCount"]))
     pass
   
 pc.verifyParameters()
