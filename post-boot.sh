@@ -9,22 +9,15 @@ install_xrt() {
     wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
     
     echo "Install XRT"
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         echo "Ubuntu XRT install"
         echo "Installing XRT dependencies..."
         apt update
         echo "Installing XRT package..."
         apt install -y /tmp/$XRT_PACKAGE
-    elif [[ "$OSVERSION" == "centos-7" ]] ; then
-        echo "CentOS 7 XRT install"
-        echo "Installing XRT dependencies..."
-        yum install -y epel-release
-        echo "Installing XRT package..."
-        yum install -y /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos-8" ]]; then
         echo "CentOS 8 XRT install"
         echo "Installing XRT dependencies..."
-        #sudo yum remove -y xrt
         yum config-manager --set-enabled powertools
         yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         yum config-manager --set-enabled appstream
@@ -52,9 +45,9 @@ fi
 }
 
 check_shellpkg() {
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         PACKAGE_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
-    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+    elif [[ "$OSVERSION" == "centos-8" ]]; then
         PACKAGE_INSTALL_INFO=`yum list installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
     fi
 }
@@ -68,19 +61,11 @@ check_xrt() {
 }
 
 check_requested_shell() {
-    if [[ "$TOOLVERSION" == "2022.1" ]]; then 
-        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$DSA"`
-    else
-        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$DSA"`
-    fi
+    SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$DSA"`
 }
 
 check_factory_shell() {
-    if [[ "$TOOLVERSION" == "2022.1" ]]; then   
-        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$FACTORY_SHELL"`
-    else
-        SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt flash --scan | grep "$FACTORY_SHELL"`
-    fi
+    SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$FACTORY_SHELL"`
 }
 
 install_u280_shell() {
@@ -108,14 +93,6 @@ install_u280_shell() {
     fi
 }
 
-flash_card() {
-    echo "Flash Card(s). "
-    if [[ "$TOOLVERSION" == "2022.1" ]]; then
-        /opt/xilinx/xrt/bin/xbmgmt program --base --device 0000:3b:00.0
-    else
-        /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA --force
-    fi
-}
 
 detect_cards() {
     lspci > /dev/null
@@ -169,13 +146,13 @@ PACKAGE_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | a
 XRT_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
 FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 
-if [ ! -f ~/boot_flag ]; then
-    detect_cards
-    install_xrt
-    install_shellpkg
-    verify_install
+
+detect_cards
+install_xrt
+install_shellpkg
+verify_install
     
-    if [ $? == 0 ] ; then
+if [ $? == 0 ] ; then
         echo "XRT and shell package installation successful."
         flash_card
     else
