@@ -3,5 +3,5 @@
 2022.1_centos-8:XRT_PACKAGE=xrt_202210.2.13.479_8.1.1911-x86_64-xrt.rpm;SHELL_PACKAGE=xilinx-u280-gen3x16-xdma_2022.1_2022_0804_1110-noarch.rpm.tar.gz;DSA=xilinx_u280_gen3x16_xdma_base_1;IMAGE_TAG=alveo-2022.1-centos-8;PACKAGE_NAME=xilinx-u280-gen3x16-xdma-base;PACKAGE_VERSION=1-3585717;XRT_VERSION=2.13.479;
 
 ## 2022.2
-2022.1_ubuntu-20.04:XRT_PACKAGE=xrt_202220.2.14.354_20.04-amd64-xrt.deb;SHELL_PACKAGE=xilinx-u280-gen3x16-xdma_2022.2_2022_1015_0317-all.deb.tar.gz;DSA=xilinx_u280_gen3x16_xdma_base_1;IMAGE_TAG=alveo-2022.2-ubuntu-20.04;PACKAGE_NAME=xilinx-u280-gen3x16-xdma-base;PACKAGE_VERSION=1-3585717;XRT_VERSION=2.14.354;
+2022.2_ubuntu-20.04:XRT_PACKAGE=xrt_202220.2.14.354_20.04-amd64-xrt.deb;SHELL_PACKAGE=xilinx-u280-gen3x16-xdma_2022.2_2022_1015_0317-all.deb.tar.gz;DSA=xilinx_u280_gen3x16_xdma_base_1;IMAGE_TAG=alveo-2022.2-ubuntu-20.04;PACKAGE_NAME=xilinx-u280-gen3x16-xdma-base;PACKAGE_VERSION=1-3585717;XRT_VERSION=2.14.354;
 2022.2_centos-7:XRT_PACKAGE=xrt_202220.2.14.354_7.8.2003-x86_64-xrt.rpm;SHELL_PACKAGE=xilinx-u280-gen3x16-xdma_2022.2_2022_1015_0317-noarch.rpm.tar.gz;DSA=gen3x16_xdma_1_202211_1;IMAGE_TAG=alveo-2022.2-centos-7;PACKAGE_NAME=xilinx-u280_2022.2;PACKAGE_VERSION=2022_1015_0317;XRT_VERSION=2.14.354;SHELL_NAME=xilinx_u280_gen3x16_xdma_base_1;
