@@ -30,7 +30,7 @@ install_xrt() {
 install_shellpkg() {
 if [[ "$SHELL" == 1 ]]; then
     if [[ "$U280" == 0 ]]; then
-        echo "[WARNING] No FPGA Board Detected. Skip shell flash."
+        echo "[WARNING] No FPGA Board Detected."
         exit 1;
     fi
      
@@ -53,9 +53,9 @@ check_shellpkg() {
 }
 
 check_xrt() {
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         XRT_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
-    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+    elif [[ "$OSVERSION" == "centos-8" ]]; then
         XRT_INSTALL_INFO=`yum list installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
     fi
 }
@@ -79,20 +79,18 @@ install_u280_shell() {
             rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+        if [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             echo "Install Ubuntu shell package"
             apt-get install -y /tmp/xilinx*
-        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+        elif [[ "$OSVERSION" == "centos-8" ]]; then
             echo "Install CentOS shell package"
             yum install -y /tmp/xilinx*
         fi
         rm /tmp/xilinx*
-        #if [[ -f /tmp/$SHELL_PACKAGE ]]; then rm /tmp/$SHELL_PACKAGE; fi
     else
         echo "The package is already installed. "
     fi
 }
-
 
 detect_cards() {
     lspci > /dev/null
@@ -153,27 +151,17 @@ install_shellpkg
 verify_install
     
 if [ $? == 0 ] ; then
-        echo "XRT and shell package installation successful."
-        flash_card
-    else
-        echo "XRT and/or shell package installation failed."
-        exit 1
-    fi
-    
-    if check_factory_shell ; then
-        echo "Shell is in factory reset state. Cold reboot required."   
-        $SCRIPT_PATH/cold-boot-init.sh &
-    elif check_requested_shell ; then
-        echo "Shell is already up to date. Cold reboot not required."
-        touch ~/boot_flag
-    else
-        echo "FPGA shell could not be verified."
-        exit 1
-    fi
-    echo "Done running startup script."
-    exit 0
+    echo "XRT and shell package installation successful."
 else
-    echo "Rebooted the node."
-    #This is only supposed to update the SC since the shell is already updated.
-    /opt/xilinx/xrt/bin/xbmgmt flash --update --force
+    echo "XRT and/or shell package installation failed."
+    exit 1
 fi
+    
+if check_requested_shell ; then
+    echo "FPGA shell verified."
+else
+    echo "FPGA shell could not be verified."
+    exit 1
+fi
+echo "Done running startup script."
+exit 0
