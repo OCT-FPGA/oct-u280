@@ -27,8 +27,7 @@ pc.defineParameter("nodeCount", "Number of Nodes", portal.ParameterType.INTEGER,
                    longDescription="Enter the number of FPGA nodes. Maximum is 16.")
 
 # Pick your image.
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
-             ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8S-64-STD',  'CENTOS 8 Stream')] 
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04')] 
 
 toolVersion = [('2023.1'),
                ('Do not install tools')]      
