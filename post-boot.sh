@@ -25,6 +25,7 @@ install_xrt() {
         sudo yum install -y /tmp/$XRT_PACKAGE
     fi
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
+    sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/2023.1/settings64.sh' >> /etc/profile"
 }
 
 install_shellpkg() {
