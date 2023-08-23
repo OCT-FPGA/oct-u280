@@ -1,4 +1,4 @@
-"""Configure FPGA nodes using a post-boot script.
+"""OCT Alveo U280 profile with post-boot script
 """
 
 # Import the Portal object.
