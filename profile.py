@@ -119,7 +119,6 @@ for i in range(params.nodeCount):
         bs.placement = "any"
         pass
         #
-    node.routable_control_ip = True
     # Install and start X11 VNC. Calling this informs the Portal that you want a VNC
     # option in the node context menu to create a browser VNC client.
     #
