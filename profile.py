@@ -40,7 +40,13 @@ pc.defineParameter("toolVersion", "Tool Version",
 pc.defineParameter("osImage", "Select Image",
                    portal.ParameterType.IMAGE,
                    imageList[0], imageList,
-                   longDescription="Supported operating systems are Ubuntu and CentOS.")                    
+                   longDescription="Supported operating systems are Ubuntu and CentOS.")  
+# Optionally start X11 VNC server.
+pc.defineParameter("startVNC",  "Start X11 VNC on your nodes",
+                   portal.ParameterType.BOOLEAN, False,
+                   longDescription="Start X11 VNC server on your nodes. There will be " +
+                   "a menu option in the node context menu to start a browser based VNC " +
+                   "client. Works really well, give it a try!")
 pc.defineParameter("enable40ginterface", "Enable 40G Network Interface",
                    portal.ParameterType.BOOLEAN, False,
                    advanced=False,
@@ -112,7 +118,15 @@ for i in range(params.nodeCount):
             pass
         bs.placement = "any"
         pass
-    
+        #
+    # Install and start X11 VNC. Calling this informs the Portal that you want a VNC
+    # option in the node context menu to create a browser VNC client.
+    #
+    # If you prefer to start the VNC server yourself (on port 5901) then add nostart=True. 
+    #
+    if params.startVNC:
+        node.startVNC()
+        pass
     if params.toolVersion != "Do not install tools":
         node.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
         pass 
