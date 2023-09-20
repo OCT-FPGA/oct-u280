@@ -32,7 +32,6 @@ install_pkgs() {
     apt install -y python3-pip
     pip3 install pynq
     pip3 install ipython
-    pip3 install numpy
 }
 
 install_shellpkg() {
