@@ -28,11 +28,11 @@ install_xrt() {
     sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/2023.1/settings64.sh' >> /etc/profile"
 }
 
-install_pkgs() {
-    apt install -y python3-pip
-    pip3 install pynq
-    pip3 install ipython
-}
+#install_pkgs() {
+#    apt install -y python3-pip
+#    pip3 install pynq
+#    pip3 install ipython
+#}
 
 install_shellpkg() {
 if [[ "$SHELL" == 1 ]]; then
@@ -178,6 +178,6 @@ else
     exit 1
 fi
 
-install_pkgs
+#install_pkgs
 echo "Done running startup script."
 exit 0
