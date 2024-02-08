@@ -27,7 +27,11 @@ imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', '
              ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04')] 
 
 toolVersion = [('2023.1'),
-               ('Do not install tools')]      
+               ('Do not install tools')] 
+
+pc.defineParameter("nodes","List of nodes",
+                   portal.ParameterType.STRING,"",
+                   longDescription="Comma-separated list of nodes (e.g., pc151,pc153).")
                    
 pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
@@ -66,7 +70,7 @@ params = pc.bindParameters()
   
 pc.verifyParameters()
 
-nodeList = ["pc151", "pc153"]
+nodeList = nodes.split(',')
 
 for nodeName in nodeList:
     host = request.RawPC(nodeName)
