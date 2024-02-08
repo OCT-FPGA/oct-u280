@@ -22,10 +22,6 @@ pc = portal.Context()
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
 
-# Variable number of nodes.
-pc.defineParameter("nodeCount", "Number of Nodes", portal.ParameterType.INTEGER, 1,
-                   longDescription="Enter the number of FPGA nodes. Maximum is 16.")
-
 # Pick your image.
 imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
              ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04')] 
@@ -41,16 +37,6 @@ pc.defineParameter("osImage", "Select Image",
                    portal.ParameterType.IMAGE,
                    imageList[0], imageList,
                    longDescription="Supported operating systems are Ubuntu and CentOS.")  
-# Optionally start X11 VNC server.
-pc.defineParameter("startVNC",  "Start X11 VNC on your nodes",
-                   portal.ParameterType.BOOLEAN, False,
-                   longDescription="Start X11 VNC server on your nodes. There will be " +
-                   "a menu option in the node context menu to start a browser based VNC " +
-                   "client. Works really well, give it a try!")
-pc.defineParameter("enable40ginterface", "Enable 40G Network Interface",
-                   portal.ParameterType.BOOLEAN, False,
-                   advanced=False,
-                   longDescription="Enable the 40G NIC on the host for FPGA-to-host experiments.")
 
 # Optional ephemeral blockstore
 pc.defineParameter("tempFileSystemSize", "Temporary Filesystem Size",
@@ -77,58 +63,28 @@ pc.defineParameter("tempFileSystemMount", "Temporary Filesystem Mount Point",
 params = pc.bindParameters()        
 
 # Check parameter validity.
-
-if params.nodeCount < 1 or params.nodeCount > 8:
-    pc.reportError(portal.ParameterError("The number of FPGA nodes should be greater than 1 and less than 8.", ["nodeCount"]))
-    pass
   
 pc.verifyParameters()
 
-if params.enable40ginterface == True:
-    if params.nodeCount > 1:
-        if params.nodeCount == 2:
-            lan = request.Link()
-        else:
-            lan = request.LAN()
-            pass
-        pass   
-    pass
-# Process nodes, adding to FPGA network
-for i in range(params.nodeCount):
-    # Create a node and add it to the request
-    name = "node" + str(i)
-    node = request.RawPC(name)
+nodeList = ["pc151", "pc153"]
+
+for nodeName in nodeList:
+    node = request.RawPC(nodeName)
     node.disk_image = params.osImage
-    # Assign to the node hosting the FPGA.
     node.hardware_type = "fpga-alveo"
     node.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
-    
-    if params.nodeCount > 1 and params.enable40ginterface == True:
-        iface = node.addInterface("enp134s0f0")
-        lan.addInterface(iface)
-        pass
-    
+
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
-        bs = node.Blockstore(name + "-bs", params.tempFileSystemMount)
+        bs = node.Blockstore(nodeName + "-bs", params.tempFileSystemMount)
         if params.tempFileSystemMax:
             bs.size = "0GB"
         else:
             bs.size = str(params.tempFileSystemSize) + "GB"
-            pass
         bs.placement = "any"
-        pass
-        #
-    # Install and start X11 VNC. Calling this informs the Portal that you want a VNC
-    # option in the node context menu to create a browser VNC client.
-    #
-    # If you prefer to start the VNC server yourself (on port 5901) then add nostart=True. 
-    #
-    if params.startVNC:
-        node.startVNC()
-        pass
+
     if params.toolVersion != "Do not install tools":
         node.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
-        pass 
-    pass
+
+# Print Request RSpec
 pc.printRequestRSpec(request)
