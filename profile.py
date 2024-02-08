@@ -69,7 +69,7 @@ pc.verifyParameters()
 nodeList = ["pc151", "pc153"]
 
 for nodeName in nodeList:
-    host = request.RawPC("host")
+    host = request.RawPC(nodeName)
     # UMass cluster
     host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
     # Assign to the node hosting the FPGA.
