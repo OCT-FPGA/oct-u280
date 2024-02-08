@@ -69,14 +69,16 @@ pc.verifyParameters()
 nodeList = ["pc151", "pc153"]
 
 for nodeName in nodeList:
-    node = request.RawPC(nodeName)
-    node.disk_image = params.osImage
-    node.hardware_type = "fpga-alveo"
-    node.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
-
+    host = request.RawPC("host")
+    # UMass cluster
+    host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
+    # Assign to the node hosting the FPGA.
+    host.component_id = nodeName
+    host.disk_image = params.osImage
+    
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
-        bs = node.Blockstore(nodeName + "-bs", params.tempFileSystemMount)
+        bs = host.Blockstore(nodeName + "-bs", params.tempFileSystemMount)
         if params.tempFileSystemMax:
             bs.size = "0GB"
         else:
@@ -84,7 +86,7 @@ for nodeName in nodeList:
         bs.placement = "any"
 
     if params.toolVersion != "Do not install tools":
-        node.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
+        host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
 
 # Print Request RSpec
 pc.printRequestRSpec(request)
