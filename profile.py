@@ -70,7 +70,7 @@ params = pc.bindParameters()
   
 pc.verifyParameters()
 
-nodeList = nodes.split(',')
+nodeList = params.nodes.split(',')
 
 for nodeName in nodeList:
     host = request.RawPC(nodeName)
