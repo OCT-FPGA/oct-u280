@@ -70,8 +70,10 @@ params = pc.bindParameters()
   
 pc.verifyParameters()
 
-nodeList = params.nodes.split(',')
+lan = request.LAN()
 
+nodeList = params.nodes.split(',')
+i = 0
 for nodeName in nodeList:
     host = request.RawPC(nodeName)
     # UMass cluster
@@ -103,6 +105,18 @@ for nodeName in nodeList:
 
     # Secret sauce.
     fpga.SubNodeOf(host)
+
+    fpga_iface1 = fpga.addInterface()
+    fpga_iface1.component_id = "eth0"
+    fpga_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+10), "255.255.255.0"))
+    fpga_iface2 = fpga.addInterface()
+    fpga_iface2.component_id = "eth1"
+    fpga_iface2.addAddress(pg.IPv4Address("192.168.40." + str(i+20), "255.255.255.0"))
+    
+    lan.addInterface(fpga_iface1)
+    lan.addInterface(fpga_iface2)
+
+    i+=1
 
 # Print Request RSpec
 pc.printRequestRSpec(request)
