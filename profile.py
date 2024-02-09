@@ -92,5 +92,17 @@ for nodeName in nodeList:
     if params.toolVersion != "Do not install tools":
         host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
 
+    # Since we want to create network links to the FPGA, it has its own identity.
+    fpga = request.RawPC("fpga-" + nodeName)
+    # UMass cluster
+    fpga.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
+    # Assign to the fgpa node
+    fpga.component_id = "fpga-" + nodeName
+    # Use the default image for the type of the node selected. 
+    fpga.setUseTypeDefaultImage()
+
+    # Secret sauce.
+    fpga.SubNodeOf(host)
+
 # Print Request RSpec
 pc.printRequestRSpec(request)
