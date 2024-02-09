@@ -118,6 +118,5 @@ for nodeName in nodeList:
 
     i+=1
 
-request.skipVlans()
 # Print Request RSpec
 pc.printRequestRSpec(request)
