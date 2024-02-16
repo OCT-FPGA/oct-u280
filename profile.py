@@ -101,7 +101,7 @@ for nodeName in nodeList:
     # Assign to the fgpa node
     fpga.component_id = "fpga-" + nodeName
     # Use the default image for the type of the node selected. 
-    #fpga.setUseTypeDefaultImage()
+    fpga.setUseTypeDefaultImage()
 
     # Secret sauce.
     fpga.SubNodeOf(host)
