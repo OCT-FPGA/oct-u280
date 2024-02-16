@@ -75,12 +75,19 @@ lan = request.LAN()
 nodeList = params.nodes.split(',')
 i = 0
 for nodeName in nodeList:
-    host = request.RawPC(nodeName)
+    #host = request.RawPC(nodeName)
     # UMass cluster
-    host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
+    #host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
     # Assign to the node hosting the FPGA.
-    host.component_id = nodeName
+    #host.component_id = nodeName
+    #host.disk_image = params.osImage
+
+    
+    host = request.RawPC(nodeName)
     host.disk_image = params.osImage
+    # Assign to the node hosting the FPGA.
+    host.hardware_type = "fpga-alveo"
+    host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
     
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
