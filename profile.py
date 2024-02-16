@@ -75,19 +75,12 @@ lan = request.LAN()
 nodeList = params.nodes.split(',')
 i = 0
 for nodeName in nodeList:
-    #host = request.RawPC(nodeName)
-    # UMass cluster
-    #host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
-    # Assign to the node hosting the FPGA.
-    #host.component_id = nodeName
-    #host.disk_image = params.osImage
-
-    
     host = request.RawPC(nodeName)
-    host.disk_image = params.osImage
-    # Assign to the node hosting the FPGA.
-    host.hardware_type = "fpga-alveo"
+    # UMass cluster
     host.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
+    # Assign to the node hosting the FPGA.
+    host.component_id = nodeName
+    host.disk_image = params.osImage
     
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
@@ -108,7 +101,7 @@ for nodeName in nodeList:
     # Assign to the fgpa node
     fpga.component_id = "fpga-" + nodeName
     # Use the default image for the type of the node selected. 
-    fpga.setUseTypeDefaultImage()
+    #fpga.setUseTypeDefaultImage()
 
     # Secret sauce.
     fpga.SubNodeOf(host)
