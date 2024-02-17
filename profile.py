@@ -31,7 +31,7 @@ toolVersion = [('2023.1'),
 
 pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
-                   longDescription="Comma-separated list of nodes (e.g., pc151,pc153).")
+                   longDescription="Comma-separated list of nodes (e.g., pc151,pc153). Please check the list of available nodes within the Mass cluster at https://www.cloudlab.us/cluster-status.php before you specify the nodes.")
                    
 pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
