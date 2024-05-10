@@ -26,6 +26,8 @@ request = pc.makeRequestRSpec()
 imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
              ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04')] 
 
+workflow = [('Vitis'), ('Vivado')]
+
 toolVersion = [('2023.1'),
                ('Do not install tools')] 
 
@@ -33,6 +35,11 @@ pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
                    longDescription="Comma-separated list of nodes (e.g., pc151,pc153). Please check the list of available nodes within the Mass cluster at https://www.cloudlab.us/cluster-status.php before you specify the nodes.")
                    
+pc.defineParameter("workflow", "Workflow",
+                   portal.ParameterType.STRING,
+                   workflow[0], workflow,
+                   longDescription="For Vitis application acceleration workflow, select Vitis. For traditional workflow, select Vivado.")   
+
 pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
                    toolVersion[0], toolVersion,
