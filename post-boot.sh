@@ -67,6 +67,16 @@ check_xrt() {
     fi
 }
 
+install_xbflash() {
+    cp -r /proj/octfpga-PG0/tools/xbflash/${OSVERSION} /tmp
+    echo "Installing xbflash."
+    if [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+        apt install /tmp/${OSVERSION}/*.deb
+    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+        yum install /tmp/${OSVERSION}/*.rpm
+    fi    
+}
+
 check_requested_shell() {
     SHELL_INSTALL_INFO=`/opt/xilinx/xrt/bin/xbmgmt examine | grep "$DSA"`
 }
@@ -146,6 +156,16 @@ verify_install() {
     fi
     return $errors
 }
+
+install_config_fpga() {
+    cp /proj/octfpga-PG0/tools/config-fpga /usr/local/bin
+}
+
+disable_pcie_fatal_error() {
+    echo "Disabling pcie fatal error reporting."
+    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 3b:00.0
+}
+
 SHELL=1
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
@@ -168,7 +188,8 @@ detect_cards
 install_xrt
 install_shellpkg
 verify_install
-
+install_config_fpga
+disable_pcie_fatal_error
     
 if [ $? == 0 ] ; then
     echo "XRT and shell package installation successful."
