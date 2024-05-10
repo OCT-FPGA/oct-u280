@@ -99,6 +99,11 @@ install_u280_shell() {
     fi
 }
 
+flash_card() {
+    echo "Flash Card(s). "
+    /opt/xilinx/xrt/bin/xbmgmt program --base --device 0000:3b:00.0
+}
+
 detect_cards() {
     lspci > /dev/null
     if [ $? != 0 ] ; then
@@ -163,9 +168,11 @@ detect_cards
 install_xrt
 install_shellpkg
 verify_install
+
     
 if [ $? == 0 ] ; then
     echo "XRT and shell package installation successful."
+    flash_card
 else
     echo "XRT and/or shell package installation failed."
     exit 1
