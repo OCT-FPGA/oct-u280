@@ -172,7 +172,8 @@ OSVERSION=`echo $OSVERSION | tr -d '"'`
 VERSION_ID=`grep '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}'`
 VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
-TOOLVERSION=$1
+WORKFLOW=$1
+TOOLVERSION=$2
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
@@ -188,12 +189,12 @@ detect_cards
 install_xrt
 install_shellpkg
 verify_install
-install_config_fpga
-disable_pcie_fatal_error
+
     
 if [ $? == 0 ] ; then
     echo "XRT and shell package installation successful."
-    flash_card
+    if [ "$WORKFLOW" = "Vitis" ]; then
+        flash_card
 else
     echo "XRT and/or shell package installation failed."
     exit 1
@@ -206,6 +207,8 @@ else
     exit 1
 fi
 
-#install_pkgs
+install_config_fpga
+disable_pcie_fatal_error
+
 echo "Done running startup script."
 exit 0
