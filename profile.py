@@ -28,8 +28,7 @@ imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', '
 
 workflow = [('Vitis'), ('Vivado')]
 
-toolVersion = [('2023.1'),
-               ('Do not install tools')] 
+toolVersion = [('2023.1')] 
 
 pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
@@ -99,7 +98,7 @@ for nodeName in nodeList:
         bs.placement = "any"
 
     if params.toolVersion != "Do not install tools":
-        host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.toolVersion + " >> /local/repository/output_log.txt"))
+        host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/repository/output_log.txt"))
 
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
