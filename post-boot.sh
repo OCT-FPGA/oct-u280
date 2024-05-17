@@ -195,6 +195,7 @@ if [ $? == 0 ] ; then
     echo "XRT and shell package installation successful."
     if [ "$WORKFLOW" = "Vitis" ]; then
         flash_card
+    fi
 else
     echo "XRT and/or shell package installation failed."
     exit 1
