@@ -208,7 +208,7 @@ if check_requested_shell ; then
     echo "FPGA shell verified."
 else
     echo "FPGA shell could not be verified."
-    perl cold-reboot.pl
+    sudo -u $(basename $HOME) perl cold-reboot.pl
 fi
 
 echo "Done running startup script."
