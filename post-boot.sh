@@ -200,6 +200,9 @@ else
     echo "XRT and/or shell package installation failed."
     exit 1
 fi
+
+install_config_fpga
+disable_pcie_fatal_error
     
 if check_requested_shell ; then
     echo "FPGA shell verified."
@@ -207,9 +210,6 @@ else
     echo "FPGA shell could not be verified."
     exit 1
 fi
-
-install_config_fpga
-disable_pcie_fatal_error
 
 echo "Done running startup script."
 exit 0
