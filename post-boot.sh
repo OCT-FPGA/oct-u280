@@ -203,12 +203,26 @@ fi
 
 install_config_fpga
 disable_pcie_fatal_error
+
+
+GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
+if [ $? -ne 0 ]; then
+echo "ERROR: could not run geni-get user_urn!"
+exit 1
+fi
+if [ $USER != $GENIUSER ]; then
+echo "User name mismatch"
+exit $?
+fi
+echo "Home directory:"
+HOMEDIR="/users/$USER"
+echo "$HOMEDIR"
     
 if check_requested_shell ; then
     echo "FPGA shell verified."
 else
     echo "FPGA shell could not be verified."
-    sudo -u $(basename $HOME) perl cold-reboot.pl
+    #sudo -u $(basename $HOME) perl cold-reboot.pl
 fi
 
 echo "Done running startup script."
