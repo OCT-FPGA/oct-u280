@@ -208,7 +208,7 @@ if check_requested_shell ; then
     echo "FPGA shell verified."
 else
     echo "FPGA shell could not be verified."
-    exit 1
+    perl cold-reboot.pl
 fi
 
 echo "Done running startup script."
