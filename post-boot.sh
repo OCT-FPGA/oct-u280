@@ -212,7 +212,6 @@ exit 1
 fi
 if [ $USER != $GENIUSER ]; then
 echo "User name mismatch"
-exit $?
 fi
 echo "Home directory:"
 HOMEDIR="/users/$USER"
