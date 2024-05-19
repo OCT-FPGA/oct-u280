@@ -212,7 +212,7 @@ else
 fi
 
 LOGFILE="/var/log/test_script.log"
-sudo -u $USER perl test.pl &> $LOGFILE
+sudo -u suranga perl test.pl &> $LOGFILE
 
 SCRIPTNAME=$0
 GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
