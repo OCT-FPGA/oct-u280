@@ -226,7 +226,7 @@ HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
 
 #LOGFILE="/var/log/test_script.log"
-#sudo -u $USER perl test.pl &> $LOGFILE
+sudo -u $USER /local/repository/test.pl
 
 sudo -u $USER /local/repository/test.sh
 
