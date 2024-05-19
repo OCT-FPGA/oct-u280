@@ -226,5 +226,6 @@ HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
 
 echo "Done running startup script."
-sudo -u $USER perl test.pl
+LOGFILE="/var/log/test_script.log"
+sudo -u $USER perl test.pl &> $LOGFILE
 exit 0
