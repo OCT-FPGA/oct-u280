@@ -204,11 +204,15 @@ fi
 install_config_fpga
 disable_pcie_fatal_error
     
-if check_requested_shell ; then
-    echo "FPGA shell verified."
+if [ "$WORKFLOW" = "Vitis" ] ; then
+    if check_requested_shell ; then
+        echo "FPGA shell verified."
+    else
+        echo "FPGA shell couldn't be verified. Cold rebooting..."
+        sudo -u geniuser perl /local/repository/cold-reboot.pl
+    fi
 else
-    echo "FPGA shell could not be verified."
-    sudo -u geniuser perl /local/repository/cold-reboot.pl
+    echo "FPGA shell verification not required for custom flow."
 fi
 
 echo "Done running startup script."
