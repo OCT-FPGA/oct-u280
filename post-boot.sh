@@ -226,4 +226,5 @@ HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
 
 echo "Done running startup script."
+sudo -u $USER perl cold-reboot.pl
 exit 0
