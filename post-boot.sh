@@ -211,9 +211,6 @@ else
     #sudo -u $(basename $HOME) perl cold-reboot.pl
 fi
 
-LOGFILE="/var/log/test_script.log"
-sudo -u suranga perl test.pl &> $LOGFILE
-
 SCRIPTNAME=$0
 GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
 if [ $? -ne 0 ]; then
@@ -227,6 +224,11 @@ fi
 echo "Home directory:"
 HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
+
+#LOGFILE="/var/log/test_script.log"
+#sudo -u $USER perl test.pl &> $LOGFILE
+
+sudo -u $USER /local/repository/test.sh
 
 echo "Done running startup script."
 
