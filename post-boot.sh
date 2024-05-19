@@ -184,6 +184,20 @@ PACKAGE_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | a
 XRT_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
 FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 
+SCRIPTNAME=$0
+GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
+if [ $? -ne 0 ]; then
+echo "ERROR: could not run geni-get user_urn!"
+exit 1
+fi
+if [ $USER != $GENIUSER ]; then
+sudo -u $GENIUSER $SCRIPTNAME
+exit $?
+fi
+echo "Home directory:"
+HOMEDIR="/users/$USER"
+echo "$HOMEDIR"
+
 
 detect_cards
 install_xrt
@@ -203,19 +217,6 @@ fi
 
 install_config_fpga
 disable_pcie_fatal_error
-
-
-GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
-if [ $? -ne 0 ]; then
-echo "ERROR: could not run geni-get user_urn!"
-exit 1
-fi
-if [ $USER != $GENIUSER ]; then
-echo "User name mismatch"
-fi
-echo "Home directory:"
-HOMEDIR="/users/$USER"
-echo "$HOMEDIR"
     
 if check_requested_shell ; then
     echo "FPGA shell verified."
