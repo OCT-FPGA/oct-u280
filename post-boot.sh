@@ -208,27 +208,8 @@ if check_requested_shell ; then
     echo "FPGA shell verified."
 else
     echo "FPGA shell could not be verified."
-    #sudo -u $(basename $HOME) perl cold-reboot.pl
+    sudo -u geniuser perl /local/repository/cold-reboot.pl
 fi
-
-SCRIPTNAME=$0
-GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
-if [ $? -ne 0 ]; then
-echo "ERROR: could not run geni-get user_urn!"
-exit 1
-fi
-if [ $USER != $GENIUSER ]; then
-sudo -u $GENIUSER $SCRIPTNAME
-exit $?
-fi
-echo "Home directory:"
-HOMEDIR="/users/$USER"
-echo "$HOMEDIR"
-
-#LOGFILE="/var/log/test_script.log"
-sudo -u geniuser /local/repository/cold-reboot.pl
-
-sudo -u $USER /local/repository/test.sh
 
 echo "Done running startup script."
 
