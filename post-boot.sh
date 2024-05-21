@@ -206,7 +206,7 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         exit 1
     fi
 else
-    echo "FPGA shell verification not required for custom flow."
+    install_xbflash
+    install_config_fpga
+    disable_pcie_fatal_error
 fi    
-install_config_fpga
-disable_pcie_fatal_error
