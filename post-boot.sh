@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-#
-# (C) Copyright 2019, Xilinx, Inc.
-#
-#!/usr/bin/env bash
 
 install_xrt() {
     echo "Download XRT installation package"
@@ -27,12 +23,6 @@ install_xrt() {
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
     sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/2023.1/settings64.sh' >> /etc/profile"
 }
-
-#install_pkgs() {
-#    apt install -y python3-pip
-#    pip3 install pynq
-#    pip3 install ipython
-#}
 
 install_shellpkg() {
 if [[ "$SHELL" == 1 ]]; then
@@ -138,7 +128,7 @@ detect_cards() {
     fi
 }
 
-verify_install() {
+verify_xrt() {
     errors=0
     check_xrt
     if [ $? == 0 ] ; then
@@ -147,6 +137,11 @@ verify_install() {
         echo "XRT installation could not be verified."
         errors=$((errors+1))
     fi
+    return $errors
+}
+
+verify_shellpkg() {
+    errors=0
     check_shellpkg
     if [ $? == 0 ] ; then
         echo "Shell package installation verified."
@@ -187,34 +182,31 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 
 detect_cards
 install_xrt
-install_shellpkg
-verify_install
-
-    
+verify_xrt
 if [ $? == 0 ] ; then
-    echo "XRT and shell package installation successful."
-    if [ "$WORKFLOW" = "Vitis" ]; then
-        flash_card
-    fi
+    echo "Successfully installed XRT."
 else
-    echo "XRT and/or shell package installation failed."
+    echo "XRT installation failed."
     exit 1
 fi
 
-install_config_fpga
-disable_pcie_fatal_error
-    
 if [ "$WORKFLOW" = "Vitis" ] ; then
-    if check_requested_shell ; then
-        echo "FPGA shell verified."
+    install_shellpkg
+    verify_shellpkg
+    if [ $? == 0 ] ; then
+        flash_card
+        if check_requested_shell ; then
+            echo "FPGA shell verified."
+        else
+            echo "FPGA shell couldn't be verified. Cold rebooting..."
+            sudo -u geniuser perl /local/repository/cold-reboot.pl
+        fi
     else
-        echo "FPGA shell couldn't be verified. Cold rebooting..."
-        sudo -u geniuser perl /local/repository/cold-reboot.pl
+        echo "Shell package installation failed."
+        exit 1
     fi
 else
     echo "FPGA shell verification not required for custom flow."
-fi
-
-echo "Done running startup script."
-
-exit 0
+fi    
+install_config_fpga
+disable_pcie_fatal_error
