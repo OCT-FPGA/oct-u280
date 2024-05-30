@@ -14,6 +14,7 @@ install_xrt() {
         echo "Installing XRT dependencies..."
         apt update
         echo "Installing XRT package..."
+        echo "/proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE"
         apt install -y /proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE
     #elif [[ "$OSVERSION" == "centos-8" ]]; then
     #    echo "CentOS 8 XRT install"
