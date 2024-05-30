@@ -63,6 +63,7 @@ check_shellpkg() {
 check_xrt() {
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
         XRT_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
+        echo "$XRT_INSTALL_INFO"
     elif [[ "$OSVERSION" == "centos-8" ]]; then
         XRT_INSTALL_INFO=`yum list installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
     fi
