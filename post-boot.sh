@@ -126,6 +126,7 @@ detect_cards() {
 }
 
 verify_install() {
+    echo "Verifying installed packages."
     errors=0
     check_xrt
     if [ $? == 0 ] ; then
