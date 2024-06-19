@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 install_xrt() {
-    echo "Download XRT installation package"
-    wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
+    #echo "Download XRT installation package"
+    #wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
     
     echo "Install XRT"
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
@@ -10,15 +10,16 @@ install_xrt() {
         echo "Installing XRT dependencies..."
         apt update
         echo "Installing XRT package..."
-        apt install -y /tmp/$XRT_PACKAGE
-    elif [[ "$OSVERSION" == "centos-8" ]]; then
-        echo "CentOS 8 XRT install"
-        echo "Installing XRT dependencies..."
-        yum config-manager --set-enabled powertools
-        yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-        yum config-manager --set-enabled appstream
-        echo "Installing XRT package..."
-        sudo yum install -y /tmp/$XRT_PACKAGE
+        echo "/proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE"
+        apt install -y /proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE
+    #elif [[ "$OSVERSION" == "centos-8" ]]; then
+    #    echo "CentOS 8 XRT install"
+    #    echo "Installing XRT dependencies..."
+    #    yum config-manager --set-enabled powertools
+    #    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    #    yum config-manager --set-enabled appstream
+    #    echo "Installing XRT package..."
+    #    sudo yum install -y /tmp/$XRT_PACKAGE
     fi
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
     sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/2023.1/settings64.sh' >> /etc/profile"
@@ -78,11 +79,11 @@ check_factory_shell() {
 install_u280_shell() {
     check_shellpkg
     if [[ $? != 0 ]]; then
-        echo "Download Shell package"
-        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
+        # echo "Download Shell package"
+        # wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
-            tar xzvf /tmp/$SHELL_PACKAGE -C /tmp/
+            tar xzvf /proj/octfpga-PG0/tools/deployment/shell/$TOOLVERSION/$OSVERSION/$SHELL_PACKAGE -C /tmp/
             rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
@@ -159,6 +160,7 @@ install_config_fpga() {
 disable_pcie_fatal_error() {
     echo "Disabling pcie fatal error reporting."
     sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 3b:00.0
+    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
 }
 
 SHELL=1
