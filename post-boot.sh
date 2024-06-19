@@ -154,6 +154,7 @@ verify_shellpkg() {
 }
 
 install_config_fpga() {
+    echo "Installing config-fpga."
     cp /proj/octfpga-PG0/tools/config-fpga /usr/local/bin
 }
 
@@ -208,6 +209,7 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         exit 1
     fi
 else
+    echo "Custom flow selected."
     install_xbflash
     install_config_fpga
     disable_pcie_fatal_error
