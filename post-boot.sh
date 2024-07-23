@@ -158,10 +158,22 @@ install_config_fpga() {
     cp /proj/octfpga-PG0/tools/config-fpga /usr/local/bin
 }
 
+
 disable_pcie_fatal_error() {
-    echo "Disabling pcie fatal error reporting."
-    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 3b:00.0
-    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
+
+    echo "Disabling PCIe fatal error reporting for node: $NODE_ID"
+    
+    local group1=("pc151" "pc153" "pc154" "pc155" "pc156" "pc157" "pc158" "pc159" "pc160" "pc161" "pc162" "pc163" "pc164" "pc165" "pc166" "pc167")
+    local group2=("pc168" "pc169" "pc170" "pc171" "pc172" "pc173" "pc174" "pc175")
+
+    # Check which group the node id belongs to and run the corresponding command
+    if [[ " ${group1[@]} " =~ " $NODE_ID " ]]; then
+        sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 3b:00.0
+    elif [[ " ${group2[@]} " =~ " $NODE_ID " ]]; then
+        sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
+    else
+        echo "Unknown node: $NODE_ID. No action taken."
+    fi
 }
 
 SHELL=1
@@ -181,6 +193,7 @@ PACKAGE_NAME=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk 
 PACKAGE_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $6}' | awk -F= '{print $2}'`
 XRT_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
 FACTORY_SHELL="xilinx_u280_GOLDEN_8"
+NODE_ID=$(hostname | cut -d'.' -f1)
 
 
 detect_cards
@@ -212,5 +225,6 @@ else
     echo "Custom flow selected."
     install_xbflash
     install_config_fpga
-    disable_pcie_fatal_error
 fi    
+# Disable PCIe fatal error reporting
+disable_pcie_fatal_error 
