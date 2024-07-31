@@ -121,8 +121,8 @@ detect_cards() {
             fi
         done
     elif [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
-        for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".1 " | cut -d" " -f7); do
-            if [[ "$DEVICE_ID" == "5008" ]] || [[ "$DEVICE_ID" == "d008" ]] || [[ "$DEVICE_ID" == "500c" ]] || [[ "$DEVICE_ID" == "d00c" ]] || [[ "$DEVICE_ID" == "500d" ]]; then
+        for DEVICE_ID in $(lspci  -d 10ee: | awk -F 'U280 ' '{print $2}'); do
+            if [[ "$DEVICE_ID" == "Golden Image" ]] ; then
                 U280=$((U280 + 1))
             fi
         done
