@@ -13,9 +13,17 @@ if (!defined($HOME)) {
     $ENV{"HOME"} = $HOME;
     $ENV{"USER"} = "geniuser";
 }
-
+my $OS_RELEASE = `lsb_release -r | awk '{print \$2}'`;
+chomp($OS_RELEASE);
+my $REBOOT;
 my $GENIGET     = "/usr/bin/geni-get";
-my $REBOOT      = "/usr/local/bin/node_reboot";
+if ($OS_RELEASE eq '22.04') {
+    $REBOOT = "/usr/bin/node_reboot";
+} elsif ($OS_RELEASE eq '20.04') {
+    $REBOOT = "/usr/local/bin/node_reboot";
+} else {
+    die("Unsupported OS version: $OS_RELEASE");
+}
 
 my $nodeID = `cat $BOOTDIR/nodeid`;
 if ($?) {
