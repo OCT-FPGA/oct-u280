@@ -194,9 +194,9 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         install_shellpkg
         check_shellpkg
         if [ $? == 0 ]; then
-            echo "Shell was successfully installed."
+            echo "Shell was successfully installed. Flashing..."
             flash_card
-            sudo -u geniuser perl /local/repository/cold-reboot.pl
+            #sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
             echo "Error: Shell installation failed."
             exit 1
