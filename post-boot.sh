@@ -110,31 +110,12 @@ detect_cards() {
             yum install -y pciutils
         fi
     fi
-    if [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
-        for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".0 " | cut -d" " -f7); do
-            if [[ "$DEVICE_ID" == "5008" ]] || [[ "$DEVICE_ID" == "d008" ]] || [[ "$DEVICE_ID" == "500c" ]] || [[ "$DEVICE_ID" == "d00c" ]]; then
-                U280=$((U280 + 1))
-            fi
-        done
-    elif [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
-        for DEVICE_ID in $(lspci  -d 10ee: | awk -F 'U280 ' '{print $2}' | awk '{print $1}'); do
-            if [[ "$DEVICE_ID" == "Golden" ]] ; then
-                U280=$((U280 + 1))
-            fi
-        done
+    if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
+        PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
+        if [ -n "$PCI_ADDR" ]; then
+            U280=$((U280 + 1))
+        fi
     fi
-}
-
-verify_shellpkg() {
-    errors=0
-    check_shellpkg
-    if [ $? == 0 ] ; then
-        echo "Shell package installation verified."
-    else
-        echo "Shell package installation could not be verified."
-        errors=$((errors+1))
-    fi
-    return $errors
 }
 
 install_config_fpga() {
@@ -147,17 +128,17 @@ disable_pcie_fatal_error() {
 
     echo "Disabling PCIe fatal error reporting for node: $NODE_ID"
     
-    local group1=("pc151" "pc153" "pc154" "pc155" "pc156" "pc157" "pc158" "pc159" "pc160" "pc161" "pc162" "pc163" "pc164" "pc165" "pc166" "pc167")
-    local group2=("pc168" "pc169" "pc170" "pc171" "pc172" "pc173" "pc174" "pc175")
+    #local group1=("pc151" "pc153" "pc154" "pc155" "pc156" "pc157" "pc158" "pc159" "pc160" "pc161" "pc162" "pc163" "pc164" "pc165" "pc166" "pc167")
+    #local group2=("pc168" "pc169" "pc170" "pc171" "pc172" "pc173" "pc174" "pc175")
 
     # Check which group the node id belongs to and run the corresponding command
-    if [[ " ${group1[@]} " =~ " $NODE_ID " ]]; then
-        sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 3b:00.0
-    elif [[ " ${group2[@]} " =~ " $NODE_ID " ]]; then
-        sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
-    else
-        echo "Unknown node: $NODE_ID. No action taken."
-    fi
+    #if [[ " ${group1[@]} " =~ " $NODE_ID " ]]; then
+    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
+    #elif [[ " ${group2[@]} " =~ " $NODE_ID " ]]; then
+    #    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
+    #else
+    #    echo "Unknown node: $NODE_ID. No action taken."
+    #fi
 }
 
 SHELL=1
@@ -179,7 +160,7 @@ PACKAGE_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | a
 XRT_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
 FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
-
+#PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
 detect_cards
 check_xrt
@@ -199,20 +180,29 @@ else
 fi
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
-    install_shellpkg
-    verify_shellpkg
-    if [ $? == 0 ] ; then
-        flash_card
+    check_shellpkg
+    if [ $? == 0 ]; then
+        echo "Shell is already installed."
         if check_requested_shell ; then
             echo "FPGA shell verified."
         else
-            echo "FPGA shell couldn't be verified. Cold rebooting..."
-            sudo -u geniuser perl /local/repository/cold-reboot.pl
+            echo "Error: FPGA shell couldn't be verified."
+            exit 1
         fi
     else
-        echo "Shell package installation failed."
-        exit 1
+        echo "Shell is not installed. Attempting to install shell..."
+        install_shellpkg
+        check_shellpkg
+        if [ $? == 0 ]; then
+            echo "Shell was successfully installed."
+            flash_card
+            sudo -u geniuser perl /local/repository/cold-reboot.pl
+        else
+            echo "Error: Shell installation failed."
+            exit 1
+        fi
     fi
+    
 else
     echo "Custom flow selected."
     install_xbflash
