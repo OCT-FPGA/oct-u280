@@ -196,6 +196,7 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         if [ $? == 0 ]; then
             echo "Shell was successfully installed. Flashing..."
             flash_card
+            echo "Cold rebooting..."
             #sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
             echo "Error: Shell installation failed."
