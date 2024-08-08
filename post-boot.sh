@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 install_xrt() {
-    #echo "Download XRT installation package"
-    #wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
-    
     echo "Install XRT"
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
         echo "Ubuntu XRT install"
@@ -22,24 +19,23 @@ install_xrt() {
     #    sudo yum install -y /tmp/$XRT_PACKAGE
     fi
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
-    sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/2023.1/settings64.sh' >> /etc/profile"
+    sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/$VITISVERSION/settings64.sh' >> /etc/profile"
 }
 
 install_shellpkg() {
-if [[ "$SHELL" == 1 ]]; then
-    if [[ "$U280" == 0 ]]; then
-        echo "[WARNING] No FPGA Board Detected."
-        exit 1;
-    fi
-     
-    for PF in U280; do
-        if [[ "$(($PF))" != 0 ]]; then
-            echo "You have $(($PF)) $PF card(s). "
-            PLATFORM=`echo "alveo-$PF" | awk '{print tolower($0)}'`
-            install_u280_shell
-        fi
-    done
+
+if [[ "$U280" == 0 ]]; then
+    echo "[WARNING] No FPGA Board Detected."
+    exit 1;
 fi
+     
+for PF in U280; do
+    if [[ "$(($PF))" != 0 ]]; then
+        echo "You have $(($PF)) $PF card(s). "
+        PLATFORM=`echo "alveo-$PF" | awk '{print tolower($0)}'`
+        install_u280_shell
+    fi
+done
 }
 
 check_shellpkg() {
@@ -129,18 +125,6 @@ detect_cards() {
     fi
 }
 
-verify_xrt() {
-    errors=0
-    check_xrt
-    if [ $? == 0 ] ; then
-        echo "XRT installation verified."
-    else
-        echo "XRT installation could not be verified."
-        errors=$((errors+1))
-    fi
-    return $errors
-}
-
 verify_shellpkg() {
     errors=0
     check_shellpkg
@@ -184,6 +168,7 @@ VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
 WORKFLOW=$1
 TOOLVERSION=$2
+VITISVERSION="2023.1"
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
@@ -197,13 +182,20 @@ NODE_ID=$(hostname | cut -d'.' -f1)
 
 
 detect_cards
-install_xrt
-verify_xrt
-if [ $? == 0 ] ; then
-    echo "Successfully installed XRT."
+check_xrt
+if [ $? == 0 ]; then
+    echo "XRT is already installed."
 else
-    echo "XRT installation failed."
-    exit 1
+    echo "XRT is not installed. Attempting to install XRT..."
+    install_xrt
+
+    check_xrt
+    if [ $? == 0 ]; then
+        echo "XRT was successfully installed."
+    else
+        echo "Error: XRT installation failed."
+        exit 1
+    fi
 fi
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
