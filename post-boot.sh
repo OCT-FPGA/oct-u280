@@ -141,7 +141,6 @@ disable_pcie_fatal_error() {
     #fi
 }
 
-SHELL=1
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
 VERSION_ID=`grep '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}'`
@@ -190,14 +189,13 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
             exit 1
         fi
     else
-        echo "Shell is not installed. Attempting to install shell..."
+        echo "Shell is not installed. Installing shell..."
         install_shellpkg
         check_shellpkg
         if [ $? == 0 ]; then
             echo "Shell was successfully installed. Flashing..."
             flash_card
             echo "Cold rebooting..."
-            sleep 120
             sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
             echo "Error: Shell installation failed."
