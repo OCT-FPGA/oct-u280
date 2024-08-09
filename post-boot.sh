@@ -98,7 +98,7 @@ install_u280_shell() {
 
 flash_card() {
     echo "Flash Card(s). "
-    /opt/xilinx/xrt/bin/xbmgmt program --base --device 0000:3b:00.0
+    /opt/xilinx/xrt/bin/xbmgmt program --base --device $PCI_ADDR
 }
 
 detect_cards() {
