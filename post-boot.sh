@@ -114,6 +114,9 @@ detect_cards() {
         PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
         if [ -n "$PCI_ADDR" ]; then
             U280=$((U280 + 1))
+        else
+            echo "Error: No card detected."
+            exit 1
         fi
     fi
 }
