@@ -164,6 +164,7 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
+echo "User name: , $USER!"
 detect_cards
 check_xrt
 if [ $? == 0 ]; then
@@ -180,6 +181,8 @@ else
         exit 1
     fi
 fi
+
+install_config_fpga
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
     check_shellpkg
@@ -198,8 +201,8 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         if [ $? == 0 ]; then
             echo "Shell was successfully installed. Flashing..."
             flash_card
-            echo "Cold rebooting..."
-            sudo -u geniuser perl /local/repository/cold-reboot.pl
+            #echo "Cold rebooting..."
+            #sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
             echo "Error: Shell installation failed."
             exit 1
@@ -209,7 +212,6 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-    install_config_fpga
 fi    
 # Disable PCIe fatal error reporting
 disable_pcie_fatal_error 
