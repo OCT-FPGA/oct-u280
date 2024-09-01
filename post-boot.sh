@@ -123,6 +123,7 @@ detect_cards() {
 
 install_config_fpga() {
     echo "Installing config-fpga."
+    cp /proj/octfpga-PG0/tools/boot /usr/local/bin
     cp /proj/octfpga-PG0/tools/config-fpga /usr/local/bin
 }
 
@@ -201,6 +202,7 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         if [ $? == 0 ]; then
             echo "Shell was successfully installed. Flashing..."
             flash_card
+            /usr/local/bin/boot
             #echo "Cold rebooting..."
             #sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
