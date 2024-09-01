@@ -183,6 +183,9 @@ else
     fi
 fi
 
+# Disable PCIe fatal error reporting
+disable_pcie_fatal_error 
+
 install_config_fpga
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
@@ -215,5 +218,3 @@ else
     echo "Custom flow selected."
     install_xbflash
 fi    
-# Disable PCIe fatal error reporting
-disable_pcie_fatal_error 
