@@ -7,19 +7,10 @@ install_xrt() {
         echo "Installing XRT dependencies..."
         apt update
         echo "Installing XRT package..."
-        echo "/proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE"
-        apt install -y /proj/octfpga-PG0/tools/deployment/xrt/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE
-    #elif [[ "$OSVERSION" == "centos-8" ]]; then
-    #    echo "CentOS 8 XRT install"
-    #    echo "Installing XRT dependencies..."
-    #    yum config-manager --set-enabled powertools
-    #    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-    #    yum config-manager --set-enabled appstream
-    #    echo "Installing XRT package..."
-    #    sudo yum install -y /tmp/$XRT_PACKAGE
+        apt install -y $XRT_BASE_PATH/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE
     fi
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
-    sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/$VITISVERSION/settings64.sh' >> /etc/profile"
+    sudo bash -c "echo 'source $VITIS_BASE_PATH/$VITISVERSION/settings64.sh' >> /etc/profile"
 }
 
 install_shellpkg() {
@@ -55,7 +46,7 @@ check_xrt() {
 }
 
 install_xbflash() {
-    cp -r /proj/octfpga-PG0/tools/xbflash/${OSVERSION} /tmp
+    cp -r $XBFLASH_BASE_PATH/${OSVERSION} /tmp
     echo "Installing xbflash."
     if [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         apt install /tmp/${OSVERSION}/*.deb
@@ -79,7 +70,7 @@ install_u280_shell() {
         # wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
-            tar xzvf /proj/octfpga-PG0/tools/deployment/shell/$TOOLVERSION/$OSVERSION/$SHELL_PACKAGE -C /tmp/
+            tar xzvf $SHELL_BASE_PATH/$TOOLVERSION/$OSVERSION/$SHELL_PACKAGE -C /tmp/
             rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
@@ -123,7 +114,7 @@ detect_cards() {
 
 install_config_fpga() {
     echo "Installing config-fpga."
-    cp /proj/octfpga-PG0/tools/config-fpga /usr/local/bin
+    cp $CONFIG_FPGA_PATH/* /usr/local/bin
 }
 
 
@@ -143,6 +134,12 @@ disable_pcie_fatal_error() {
     #    echo "Unknown node: $NODE_ID. No action taken."
     #fi
 }
+
+XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
+SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
+XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
+VITIS_BASE_PATH="/proj/octfpga-PG0/tools/Xilinx/Vitis"
+CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
@@ -164,6 +161,7 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
+echo "User name: , $USER!"
 detect_cards
 check_xrt
 if [ $? == 0 ]; then
@@ -180,6 +178,11 @@ else
         exit 1
     fi
 fi
+
+# Disable PCIe fatal error reporting
+disable_pcie_fatal_error 
+
+install_config_fpga
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
     check_shellpkg
@@ -198,8 +201,9 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
         if [ $? == 0 ]; then
             echo "Shell was successfully installed. Flashing..."
             flash_card
-            echo "Cold rebooting..."
-            sudo -u geniuser perl /local/repository/cold-reboot.pl
+            /usr/local/bin/post-boot-fpga
+            #echo "Cold rebooting..."
+            #sudo -u geniuser perl /local/repository/cold-reboot.pl
         else
             echo "Error: Shell installation failed."
             exit 1
@@ -209,7 +213,4 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-    install_config_fpga
 fi    
-# Disable PCIe fatal error reporting
-disable_pcie_fatal_error 
