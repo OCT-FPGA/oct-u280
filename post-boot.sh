@@ -119,7 +119,7 @@ install_config_fpga() {
 
 install_libs() {
     echo "Installing libs."
-    sudo /proj/octfpga-PG0/tools/Xilinx/Vitis/VITISVERSION/scripts/installLibs.sh
+    sudo $VITIS_BASE_PATH/$VITISVERSION/scripts/installLibs.sh
 }
 
 disable_pcie_fatal_error() {
