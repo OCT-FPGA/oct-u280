@@ -117,6 +117,9 @@ install_config_fpga() {
     cp $CONFIG_FPGA_PATH/* /usr/local/bin
 }
 
+install_libs() {
+    sudo /proj/octfpga-PG0/tools/Xilinx/Vitis/VITISVERSION/scripts/installLibs.sh
+}
 
 disable_pcie_fatal_error() {
 
@@ -179,6 +182,7 @@ else
     fi
 fi
 
+install_libs
 # Disable PCIe fatal error reporting
 disable_pcie_fatal_error 
 
