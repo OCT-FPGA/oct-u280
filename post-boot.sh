@@ -13,6 +13,12 @@ install_xrt() {
     sudo bash -c "echo 'source $VITIS_BASE_PATH/$VITISVERSION/settings64.sh' >> /etc/profile"
 }
 
+install_dpdk() {
+    cp /proj/octfpga-PG0/tools/dpdk.sh /opt/.
+    cd /opt/
+    ./dpdk.sh
+}
+
 install_shellpkg() {
 
 if [[ "$U280" == 0 ]]; then
