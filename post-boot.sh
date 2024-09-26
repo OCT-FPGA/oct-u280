@@ -123,20 +123,8 @@ install_libs() {
 }
 
 disable_pcie_fatal_error() {
-
     echo "Disabling PCIe fatal error reporting for node: $NODE_ID"
-    
-    #local group1=("pc151" "pc153" "pc154" "pc155" "pc156" "pc157" "pc158" "pc159" "pc160" "pc161" "pc162" "pc163" "pc164" "pc165" "pc166" "pc167")
-    #local group2=("pc168" "pc169" "pc170" "pc171" "pc172" "pc173" "pc174" "pc175")
-
-    # Check which group the node id belongs to and run the corresponding command
-    #if [[ " ${group1[@]} " =~ " $NODE_ID " ]]; then
     sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
-    #elif [[ " ${group2[@]} " =~ " $NODE_ID " ]]; then
-    #    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh 37:00.0
-    #else
-    #    echo "Unknown node: $NODE_ID. No action taken."
-    #fi
 }
 
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
@@ -193,12 +181,7 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
     check_shellpkg
     if [ $? == 0 ]; then
         echo "Shell is already installed."
-        if check_requested_shell ; then
-            echo "FPGA shell verified."
-        else
-            echo "Error: FPGA shell couldn't be verified."
-            exit 1
-        fi
+
     else
         echo "Shell is not installed. Installing shell..."
         install_shellpkg
@@ -214,7 +197,12 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
             exit 1
         fi
     fi
-    
+    if check_requested_shell ; then
+        echo "FPGA shell verified."
+    else
+        echo "Error: FPGA shell couldn't be verified."
+        exit 1
+    fi
 else
     echo "Custom flow selected."
     install_xbflash
