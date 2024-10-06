@@ -23,8 +23,7 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 # Pick your image.
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
-             ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04')] 
+imageList = [('urn:publicid:IDN+cloudlab.umass.edu+image+octfpga-PG0:oct-u280-vnc2', 'UBUNTU 20.04 with VNC')] 
 
 workflow = [('Vitis'), ('Vivado')]
 
