@@ -127,6 +127,11 @@ disable_pcie_fatal_error() {
     sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
 }
 
+install_vnc {
+    apt install ubuntu-gnome-desktop
+    apt install tigervnc-standalone-server
+}
+
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
 XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
@@ -206,4 +211,6 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-fi    
+fi
+
+install_vnc
