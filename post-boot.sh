@@ -129,8 +129,8 @@ disable_pcie_fatal_error() {
 
 install_vnc() {
     apt update 
-    apt install ubuntu-gnome-desktop
-    apt install tigervnc-standalone-server
+    apt install -y ubuntu-gnome-desktop
+    apt install -y tigervnc-standalone-server
 }
 
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
