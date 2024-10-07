@@ -127,7 +127,8 @@ disable_pcie_fatal_error() {
     sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
 }
 
-install_vnc {
+install_vnc() {
+    apt update 
     apt install ubuntu-gnome-desktop
     apt install tigervnc-standalone-server
 }
