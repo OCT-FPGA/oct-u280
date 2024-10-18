@@ -13,6 +13,11 @@ install_xrt() {
     sudo bash -c "echo 'source $VITIS_BASE_PATH/$VITISVERSION/settings64.sh' >> /etc/profile"
 }
 
+install_dev_platform() {
+    echo "Installing dev platform"
+    apt install $DEVTOOLS_BASE_PATH/$TOOLVERSION/*.deb
+}
+
 install_shellpkg() {
 
 if [[ "$U280" == 0 ]]; then
@@ -138,6 +143,7 @@ install_vnc() {
 
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
+DEVTOOLS_BASE_PATH="/proj/octfpga-PG0/tools/dev_platform"
 XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
 VITIS_BASE_PATH="/proj/octfpga-PG0/tools/Xilinx/Vitis"
 CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot"
@@ -215,5 +221,5 @@ else
     echo "Custom flow selected."
     install_xbflash
 fi
-
+install_dev_platform
 install_vnc
