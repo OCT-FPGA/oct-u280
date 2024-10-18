@@ -32,27 +32,30 @@ done
 check_shellpkg() {
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
         PACKAGE_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
-    elif [[ "$OSVERSION" == "centos-8" ]]; then
-        PACKAGE_INSTALL_INFO=`yum list installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
+    else
+        echo "Unsupported OS: $OSVERSION"
+        exit 1 
     fi
 }
 
 check_xrt() {
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
         XRT_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
-    elif [[ "$OSVERSION" == "centos-8" ]]; then
-        XRT_INSTALL_INFO=`yum list installed 2>/dev/null | grep "xrt" | grep "$XRT_VERSION"`
+    else
+        echo "Unsupported OS: $OSVERSION"
+        exit 1 
     fi
 }
 
 install_xbflash() {
     cp -r $XBFLASH_BASE_PATH/${OSVERSION} /tmp
     echo "Installing xbflash."
-    if [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
         apt install /tmp/${OSVERSION}/*.deb
-    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
-        yum install /tmp/${OSVERSION}/*.rpm
-    fi    
+    else
+        echo "Unsupported OS: $OSVERSION"
+        exit 1 
+    fi 
 }
 
 check_requested_shell() {
@@ -159,7 +162,6 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
-echo "User name: , $USER!"
 detect_cards
 check_xrt
 if [ $? == 0 ]; then
