@@ -25,9 +25,9 @@ request = pc.makeRequestRSpec()
 # Pick your image.
 imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04')] 
 
-workflow = [('Vitis'), ('Vivado')]
+workflow = ['Vitis', 'Vivado']
 
-toolVersion = [('2023.1')] 
+toolVersion = ['2023.1', '2023.2'] 
 
 pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
