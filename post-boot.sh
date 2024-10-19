@@ -15,6 +15,7 @@ install_xrt() {
 
 install_dev_platform() {
     echo "Installing dev platform"
+    apt update
     apt install $DEVTOOLS_BASE_PATH/$TOOLVERSION/*.deb
 }
 
