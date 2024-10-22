@@ -97,8 +97,6 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
-
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
     # UMass cluster
@@ -110,6 +108,8 @@ for nodeName in nodeList:
 
     # Secret sauce.
     fpga.SubNodeOf(host)
+
+    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
 
     host_iface1 = host.addInterface()
     host_iface1.component_id = "eth2"
