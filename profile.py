@@ -97,8 +97,7 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    if params.toolVersion != "Do not install tools":
-        host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
+    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
 
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
