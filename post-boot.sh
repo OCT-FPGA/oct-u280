@@ -129,6 +129,7 @@ install_config_fpga() {
 install_libs() {
     echo "Installing libs."
     sudo $VITIS_BASE_PATH/$VITISVERSION/scripts/installLibs.sh
+    apt install -y opencl-headers
 }
 
 disable_pcie_fatal_error() {
