@@ -143,6 +143,7 @@ install_vnc() {
     apt install -y tigervnc-standalone-server
 }
 
+
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
 DEVTOOLS_BASE_PATH="/proj/octfpga-PG0/tools/dev_platform"
@@ -169,6 +170,10 @@ XRT_VERSION=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -
 FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
+
+echo "Home directory:"
+HOMEDIR="/users/$USER"
+echo "$HOMEDIR"
 
 detect_cards
 check_xrt
