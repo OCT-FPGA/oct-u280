@@ -171,10 +171,6 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
-echo "Home directory:"
-HOMEDIR="/users/$USER"
-echo "$HOMEDIR"
-
 detect_cards
 check_xrt
 if [ $? == 0 ]; then
@@ -230,3 +226,19 @@ else
 fi
 install_dev_platform
 install_vnc
+
+SCRIPTNAME=$0
+#
+GENIUSER=`geni-get user_urn | awk -F+ '{print $4}'`
+if [ $? -ne 0 ]; then
+echo "ERROR: could not run geni-get user_urn!"
+exit 1
+fi
+if [ $USER != $GENIUSER ]; then
+sudo -u $GENIUSER $SCRIPTNAME
+exit $?
+fi
+
+echo "Home directory:"
+HOMEDIR="/users/$USER"
+echo "$HOMEDIR"
