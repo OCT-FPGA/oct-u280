@@ -242,3 +242,5 @@ fi
 echo "Home directory:"
 HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
+
+cp -r /proj/octfpga-PG0/vadd-debug $HOMEDIR
