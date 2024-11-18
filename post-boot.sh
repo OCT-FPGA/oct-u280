@@ -243,4 +243,4 @@ echo "Home directory:"
 HOMEDIR="/users/$USER"
 echo "$HOMEDIR"
 
-cp -r /proj/octfpga-PG0/vadd-debug $HOMEDIR
+git clone https://github.com/OCT-FPGA/vadd-debug.git $HOMEDIR
