@@ -88,8 +88,8 @@ for nodeName in nodeList:
     host.component_id = nodeName
     host.disk_image = params.osImage
 
-    vm = request.KVM("vm-" + nodeName)  
-    vm.disk_image = params.osImage
+    vm = request.XenVM("vm-" + nodeName)  
+    vm.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-XEN
     vm.SubNodeOf(host)  
     
     # Optional Blockstore
