@@ -88,7 +88,7 @@ for nodeName in nodeList:
     host.component_id = nodeName
     host.disk_image = params.osImage
 
-    vm = request.XenVM("vm-" + nodeName)  
+    vm = request.KVM("vm-" + nodeName)  
     vm.disk_image = params.osImage
     vm.SubNodeOf(host)  
     
