@@ -115,9 +115,9 @@ for nodeName in nodeList:
     # Secret sauce.
     #fpga.SubNodeOf(host)
 
-    host_iface1 = host.addInterface("br0")
-    host_iface1.component_id = "eth2"
-    host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+30), "255.255.255.0")) 
+    #host_iface1 = host.addInterface("br0")
+    #host_iface1.component_id = "eth2"
+    #host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+30), "255.255.255.0")) 
 
     #vm_iface = vm.addInterface("br0")  
     #vm_iface.addAddress(pg.IPv4Address("192.168.40." + str(i+10), "255.255.255.0"))
@@ -131,7 +131,7 @@ for nodeName in nodeList:
     
     #lan.addInterface(fpga_iface1)
     #lan.addInterface(fpga_iface2)
-    lan.addInterface(host_iface1)
+    #lan.addInterface(host_iface1)
     #lan.addInterface(vm_iface)
   
     i+=1
