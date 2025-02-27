@@ -68,7 +68,7 @@ pc.verifyParameters()
 host = request.RawPC("host")
 host.hardware_type = "fpga-alveo"
 host.disk_image = params.osImage
-vm1 = mkVM(host, "vm1");
+vm1 = mkVM("host", "vm1");
     
     
 host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
