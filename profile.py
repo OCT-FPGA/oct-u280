@@ -16,6 +16,19 @@ import geni.urn as urn
 # Emulab extension
 import geni.rspec.emulab
 
+# Function for creating VM guests with common parameters
+def mkVM(pnode, name):
+    node = request.XenVM(name)
+    node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD";
+    node.cores = 4
+    node.ram = 4096
+    node.exclusive = True
+    #
+    # This is the crux of the biscuit; tell the mapper exactly where to place the VM.
+    #
+    node.InstantiateOn(pnode)
+    return node
+
 # Create a portal context.
 pc = portal.Context()
 
@@ -88,9 +101,7 @@ for nodeName in nodeList:
     host.component_id = nodeName
     host.disk_image = params.osImage
 
-    vm = request.XenVM("vm-" + nodeName)  
-    vm.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:XEN411-64-STD"
-    vm.SubNodeOf(host)  
+    vm1 = mkVM(host, "vm1");
     
     # Optional Blockstore
     if params.tempFileSystemSize > 0 or params.tempFileSystemMax:
@@ -101,7 +112,7 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
+    #host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
 
     # Since we want to create network links to the FPGA, it has its own identity.
     #fpga = request.RawPC("fpga-" + nodeName)
