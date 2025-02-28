@@ -21,7 +21,7 @@ def mkVM(pnode, name):
     node = request.XenVM(name)
     node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD";
     node.cores = 4
-    node.ram = 4096
+    node.ram = 16384
     node.exclusive = True
     #
     # This is the crux of the biscuit; tell the mapper exactly where to place the VM.
@@ -68,6 +68,7 @@ pc.verifyParameters()
 pnode1 = request.RawPC('pnode1')
 pnode1.hardware_type = "fpga-alveo"
 vm1 = mkVM("pnode1", "vm1");
+vm1 = mkVM("pnode1", "vm2");
     
     
 host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
