@@ -65,14 +65,13 @@ params = pc.bindParameters()
   
 pc.verifyParameters()
 
-host = request.RawPC("host")
-host.hardware_type = "fpga-alveo"
-host.disk_image = params.osImage
-vm1 = mkVM("host", "vm1");
+pnode1 = request.RawPC('pnode1')
+pnode1.hardware_type = "fpga-alveo"
+vm1 = mkVM("pnode1", "vm1");
     
     
-host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
-vm1.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
+#host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
+#vm1.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
 
 
 # Print Request RSpec
