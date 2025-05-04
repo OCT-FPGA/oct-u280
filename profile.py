@@ -27,7 +27,7 @@ imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', '
 
 workflow = ['Vitis', 'Vivado']
 
-toolVersion = ['2023.1', '2023.2'] 
+toolVersion = ['2023.2', '2023.1'] 
 
 pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
