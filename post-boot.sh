@@ -134,7 +134,7 @@ XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
 XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
 VITIS_BASE_PATH="/proj/octfpga-PG0/tools/Xilinx/Vitis"
-CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot"
+CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot/u280/ubuntu-$(lsb_release -rs)"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
