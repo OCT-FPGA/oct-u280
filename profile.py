@@ -4,12 +4,6 @@
 # Import the Portal object.
 import geni.portal as portal
 # Import the ProtoGENI library.
-"""fpga 
-"""
-
-# Import the Portal object.
-import geni.portal as portal
-# Import the ProtoGENI library.
 import geni.rspec.pg as pg
 # We use the URN library below.
 import geni.urn as urn
