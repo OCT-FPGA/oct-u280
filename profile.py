@@ -94,29 +94,12 @@ for nodeName in nodeList:
     host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
 
     # Since we want to create network links to the FPGA, it has its own identity.
-    fpga = request.RawPC("fpga-" + nodeName)
-    # UMass cluster
-    fpga.component_manager_id = "urn:publicid:IDN+cloudlab.umass.edu+authority+cm"
-    # Assign to the fgpa node
-    fpga.component_id = "fpga-" + nodeName
-    # Use the default image for the type of the node selected. 
-    fpga.setUseTypeDefaultImage()
 
-    # Secret sauce.
-    fpga.SubNodeOf(host)
 
     host_iface1 = host.addInterface()
     host_iface1.component_id = "eth2"
     host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+30), "255.255.255.0")) 
-    fpga_iface1 = fpga.addInterface()
-    fpga_iface1.component_id = "eth0"
-    fpga_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+10), "255.255.255.0"))
-    fpga_iface2 = fpga.addInterface()
-    fpga_iface2.component_id = "eth1"
-    fpga_iface2.addAddress(pg.IPv4Address("192.168.40." + str(i+20), "255.255.255.0"))
-    
-    lan.addInterface(fpga_iface1)
-    lan.addInterface(fpga_iface2)
+  
     lan.addInterface(host_iface1)
   
     i+=1
