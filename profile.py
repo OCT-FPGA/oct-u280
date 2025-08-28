@@ -107,19 +107,19 @@ for nodeName in nodeList:
 
     host_iface1 = host.addInterface()
     host_iface1.component_id = "eth2"
-    host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+10), "255.255.255.0")) 
+    host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+30), "255.255.255.0")) 
     fpga_iface1 = fpga.addInterface()
     fpga_iface1.component_id = "eth0"
-    fpga_iface1.addAddress(pg.IPv4Address("192.168.10." + str(i+10), "255.255.255.0"))
-    #fpga_iface2 = fpga.addInterface()
-    #fpga_iface2.component_id = "eth1"
-    #fpga_iface2.addAddress(pg.IPv4Address("192.168.20." + str(i+10), "255.255.255.0"))
+    fpga_iface1.addAddress(pg.IPv4Address("192.168.40." + str(i+10), "255.255.255.0"))
+    fpga_iface2 = fpga.addInterface()
+    fpga_iface2.component_id = "eth1"
+    fpga_iface2.addAddress(pg.IPv4Address("192.168.40." + str(i+20), "255.255.255.0"))
     
     lan.addInterface(fpga_iface1)
-    #lan.addInterface(fpga_iface2)
+    lan.addInterface(fpga_iface2)
     lan.addInterface(host_iface1)
   
     i+=1
-
+#request.skipVlans()
 # Print Request RSpec
 pc.printRequestRSpec(request)
