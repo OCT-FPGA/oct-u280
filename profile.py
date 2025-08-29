@@ -120,6 +120,6 @@ for nodeName in nodeList:
     lan.addInterface(host_iface1)
   
     i+=1
-request.skipVlans()
+#request.skipVlans()
 # Print Request RSpec
 pc.printRequestRSpec(request)
