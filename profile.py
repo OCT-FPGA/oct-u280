@@ -71,7 +71,7 @@ params = pc.bindParameters()
 pc.verifyParameters()
 
 lan = request.LAN()
-
+lan.best_effort = True
 nodeList = params.nodes.split(',')
 i = 0
 for nodeName in nodeList:
