@@ -4,12 +4,6 @@
 # Import the Portal object.
 import geni.portal as portal
 # Import the ProtoGENI library.
-"""fpga 
-"""
-
-# Import the Portal object.
-import geni.portal as portal
-# Import the ProtoGENI library.
 import geni.rspec.pg as pg
 # We use the URN library below.
 import geni.urn as urn
@@ -23,7 +17,9 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 # Pick your image.
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04')] 
+
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04'),
+             ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04')] 
 
 workflow = ['Vitis', 'Vivado']
 
@@ -76,7 +72,7 @@ params = pc.bindParameters()
 pc.verifyParameters()
 
 lan = request.LAN()
-
+lan.best_effort = True
 nodeList = params.nodes.split(',')
 i = 0
 for nodeName in nodeList:
