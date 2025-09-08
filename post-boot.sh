@@ -13,6 +13,12 @@ install_xrt() {
     sudo bash -c "echo 'source $VITIS_BASE_PATH/$VITISVERSION/settings64.sh' >> /etc/profile"
 }
 
+install_dev_platform() {
+    echo "Installing dev platform"
+    apt update
+    apt install $DEVTOOLS_BASE_PATH/$TOOLVERSION/*.deb
+}
+
 install_shellpkg() {
 
 if [[ "$U280" == 0 ]]; then
@@ -123,6 +129,7 @@ install_config_fpga() {
 install_libs() {
     echo "Installing libs."
     sudo $VITIS_BASE_PATH/$VITISVERSION/scripts/installLibs.sh
+    apt install -y opencl-headers
 }
 
 disable_pcie_fatal_error() {
@@ -130,8 +137,16 @@ disable_pcie_fatal_error() {
     sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
 }
 
+install_vnc() {
+    apt update 
+    apt install -y ubuntu-gnome-desktop
+    apt install -y tigervnc-standalone-server
+}
+
+
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
+DEVTOOLS_BASE_PATH="/proj/octfpga-PG0/tools/dev_platform"
 XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
 VITIS_BASE_PATH="/proj/octfpga-PG0/tools/Xilinx/Vitis"
 CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot/u280/ubuntu-$(lsb_release -rs)"
@@ -143,7 +158,7 @@ VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
 WORKFLOW=$1
 TOOLVERSION=$2
-VITISVERSION="2023.1"
+VITISVERSION="2023.2"
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
@@ -208,4 +223,6 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-fi    
+fi
+install_dev_platform
+install_vnc
