@@ -122,7 +122,7 @@ install_config_fpga() {
 
 install_libs() {
     echo "Installing libs."
-    sudo $VITIS_BASE_PATH/$VITISVERSION/scripts/installLibs.sh
+    sudo $VITIS_BASE_PATH/$TOOLVERSION/scripts/installLibs.sh
 }
 
 disable_pcie_fatal_error() {
@@ -133,7 +133,7 @@ disable_pcie_fatal_error() {
 XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
 SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
 XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
-VITIS_BASE_PATH="/proj/octfpga-PG0/tools/Xilinx/Vitis"
+VITIS_BASE_PATH="/share/Xilinx/Vitis"
 CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot/u280/ubuntu-$(lsb_release -rs)"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
@@ -143,7 +143,6 @@ VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
 WORKFLOW=$1
 TOOLVERSION=$2
-VITISVERSION="2023.1"
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
