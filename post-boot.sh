@@ -143,6 +143,7 @@ VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
 WORKFLOW=$1
 TOOLVERSION=$2
+REMOTEDESKTOP=$3
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
@@ -207,4 +208,13 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-fi    
+fi 
+
+if [ $REMOTEDESKTOP == "True" ] ; then
+    echo "Installing remote desktop software"
+    apt install -y ubuntu-gnome-desktop
+    echo "Installed gnome desktop"
+    systemctl set-default multi-user.target
+    apt install -y tigervnc-standalone-server
+    echo "Installed vnc server"
+fi
