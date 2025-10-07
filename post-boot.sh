@@ -117,7 +117,7 @@ detect_cards() {
 
 install_config_fpga() {
     echo "Installing config-fpga."
-    cp $CONFIG_FPGA_PATH/* /usr/local/bin
+    cp $CONFIG_FPGA_PATH/$OSVERSION/* /usr/local/bin
 }
 
 install_libs() {
@@ -127,14 +127,14 @@ install_libs() {
 
 disable_pcie_fatal_error() {
     echo "Disabling PCIe fatal error reporting for node: $NODE_ID"
-    sudo /proj/octfpga-PG0/tools/pcie_disable_fatal.sh $PCI_ADDR
+    sudo /share/tools/u280/pcie_disable_fatal.sh $PCI_ADDR
 }
 
-XRT_BASE_PATH="/proj/octfpga-PG0/tools/deployment/xrt"
-SHELL_BASE_PATH="/proj/octfpga-PG0/tools/deployment/shell"
-XBFLASH_BASE_PATH="/proj/octfpga-PG0/tools/xbflash"
+XRT_BASE_PATH="/share/tools/u280/deployment/xrt"
+SHELL_BASE_PATH="/share/tools/u280/deployment/shell"
+XBFLASH_BASE_PATH="/share/tools/u280/xbflash"
 VITIS_BASE_PATH="/share/Xilinx/Vitis"
-CONFIG_FPGA_PATH="/proj/octfpga-PG0/tools/post-boot/u280/ubuntu-$(lsb_release -rs)"
+CONFIG_FPGA_PATH="/share/tools/u280/post-boot"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
