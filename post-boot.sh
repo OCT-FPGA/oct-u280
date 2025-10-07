@@ -74,7 +74,6 @@ install_u280_shell() {
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
             tar xzvf $SHELL_BASE_PATH/$TOOLVERSION/$OSVERSION/$SHELL_PACKAGE -C /tmp/
-            rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
