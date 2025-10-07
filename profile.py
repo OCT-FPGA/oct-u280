@@ -44,7 +44,7 @@ pc.defineParameter("osImage", "Select Image",
                    longDescription="Supported operating systems are Ubuntu and CentOS.")  
 
 pc.defineParameter("remoteDesktop", "Remote Desktop Access",
-                   portal.ParameterType.BOOLEAN, True,
+                   portal.ParameterType.BOOLEAN, False,
                    advanced=False,
                    longDescription="Enable remote desktop access by installing GNOME desktop and VNC server.")
 
