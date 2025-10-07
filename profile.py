@@ -37,10 +37,16 @@ pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
                    toolVersion[0], toolVersion,
                    longDescription="Select a tool version. It is recommended to use the latest version for the deployment workflow. For more information, visit https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#gettingStarted")   
+
 pc.defineParameter("osImage", "Select Image",
                    portal.ParameterType.IMAGE,
                    imageList[0], imageList,
                    longDescription="Supported operating systems are Ubuntu and CentOS.")  
+
+pc.defineParameter("remoteDesktop", "Remote Desktop Access",
+                   portal.ParameterType.BOOLEAN, True,
+                   advanced=False,
+                   longDescription="Enable remote desktop access by installing GNOME desktop and VNC server.")
 
 # Optional ephemeral blockstore
 pc.defineParameter("tempFileSystemSize", "Temporary Filesystem Size",
@@ -91,8 +97,9 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
-
+    cmd = "sudo /local/repository/post-boot.sh {} {} {} >> /local/logs/output_log.txt 2>&1".format(params.workflow, params.toolVersion, params.remoteDesktop)
+    host.addService(pg.Execute(shell="bash", command=cmd))
+  
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
     # UMass cluster

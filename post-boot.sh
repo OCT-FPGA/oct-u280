@@ -74,7 +74,6 @@ install_u280_shell() {
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
             tar xzvf $SHELL_BASE_PATH/$TOOLVERSION/$OSVERSION/$SHELL_PACKAGE -C /tmp/
-            rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
@@ -143,6 +142,7 @@ VERSION_ID=`echo $VERSION_ID | tr -d '"'`
 OSVERSION="$OSVERSION-$VERSION_ID"
 WORKFLOW=$1
 TOOLVERSION=$2
+REMOTEDESKTOP=$3
 SCRIPT_PATH=/local/repository
 COMB="${TOOLVERSION}_${OSVERSION}"
 XRT_PACKAGE=`grep ^$COMB: $SCRIPT_PATH/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
@@ -207,4 +207,13 @@ if [ "$WORKFLOW" = "Vitis" ] ; then
 else
     echo "Custom flow selected."
     install_xbflash
-fi    
+fi 
+
+if [ $REMOTEDESKTOP == "True" ] ; then
+    echo "Installing remote desktop software"
+    apt install -y ubuntu-gnome-desktop
+    echo "Installed gnome desktop"
+    systemctl set-default multi-user.target
+    apt install -y tigervnc-standalone-server
+    echo "Installed vnc server"
+fi
