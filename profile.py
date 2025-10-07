@@ -97,7 +97,7 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    cmd = f"sudo /local/repository/post-boot.sh {params.workflow} {params.toolVersion} {params.remoteDesktop} >> /local/logs/output_log.txt 2>&1"
+    cmd = "sudo /local/repository/post-boot.sh {} {} {} >> /local/logs/output_log.txt 2>&1".format(params.workflow, params.toolVersion, params.remoteDesktop)
     host.addService(pg.Execute(shell="bash", command=cmd))
   
     # Since we want to create network links to the FPGA, it has its own identity.
