@@ -4,12 +4,6 @@
 # Import the Portal object.
 import geni.portal as portal
 # Import the ProtoGENI library.
-"""fpga 
-"""
-
-# Import the Portal object.
-import geni.portal as portal
-# Import the ProtoGENI library.
 import geni.rspec.pg as pg
 # We use the URN library below.
 import geni.urn as urn
@@ -23,12 +17,12 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 # Pick your image.
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
-             ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04')] 
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04'),
+             ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04')] 
 
-workflow = [('Vitis'), ('Vivado')]
+workflow = ['Vitis', 'Vivado']
 
-toolVersion = [('2023.1')] 
+toolVersion = ['2023.2', '2023.1'] 
 
 pc.defineParameter("nodes","List of nodes",
                    portal.ParameterType.STRING,"",
@@ -43,10 +37,16 @@ pc.defineParameter("toolVersion", "Tool Version",
                    portal.ParameterType.STRING,
                    toolVersion[0], toolVersion,
                    longDescription="Select a tool version. It is recommended to use the latest version for the deployment workflow. For more information, visit https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#gettingStarted")   
+
 pc.defineParameter("osImage", "Select Image",
                    portal.ParameterType.IMAGE,
                    imageList[0], imageList,
                    longDescription="Supported operating systems are Ubuntu and CentOS.")  
+
+pc.defineParameter("remoteDesktop", "Remote Desktop Access",
+                   portal.ParameterType.BOOLEAN, False,
+                   advanced=False,
+                   longDescription="Enable remote desktop access by installing GNOME desktop and VNC server.")
 
 # Optional ephemeral blockstore
 pc.defineParameter("tempFileSystemSize", "Temporary Filesystem Size",
@@ -77,7 +77,7 @@ params = pc.bindParameters()
 pc.verifyParameters()
 
 lan = request.LAN()
-
+lan.best_effort = True
 nodeList = params.nodes.split(',')
 i = 0
 for nodeName in nodeList:
@@ -97,9 +97,9 @@ for nodeName in nodeList:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
 
-    if params.toolVersion != "Do not install tools":
-        host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
-
+    cmd = "sudo /local/repository/post-boot.sh {} {} {} >> /local/logs/output_log.txt 2>&1".format(params.workflow, params.toolVersion, params.remoteDesktop)
+    host.addService(pg.Execute(shell="bash", command=cmd))
+  
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
     # UMass cluster
