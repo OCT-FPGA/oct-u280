@@ -89,7 +89,7 @@ lan2.link_multiplexing = True
 lan2.best_effort = True
 
 nodeList = params.nodes.split(',')
-n_idx = 0
+i = 0
 for nodeName in nodeList:
     host = request.RawPC(nodeName)
     # UMass cluster
@@ -106,8 +106,10 @@ for nodeName in nodeList:
         else:
             bs.size = str(params.tempFileSystemSize) + "GB"
         bs.placement = "any"
-    
-    host.addService(pg.Execute(shell="bash", command="sudo /local/repository/post-boot.sh " + params.workflow + " " + params.toolVersion + " >> /local/logs/output_log.txt"))
+
+    cmd = "sudo /local/repository/post-boot.sh {} {} {} >> /local/logs/output_log.txt 2>&1".format(params.workflow, params.toolVersion, params.remoteDesktop)
+    host.addService(pg.Execute(shell="bash", command=cmd))
+  
     # Since we want to create network links to the FPGA, it has its own identity.
     fpga = request.RawPC("fpga-" + nodeName)
     # UMass cluster
@@ -120,13 +122,7 @@ for nodeName in nodeList:
     # Secret sauce.
     fpga.SubNodeOf(host)
 
-    # lan1.link_multiplexing = True
-    # lan1.best_effort = True
-
-    # lan2.link_multiplexing = True
-    # lan2.best_effort = True
-    
-    if n_idx == 0:
+    if i == 0:
         host_iface1 = host.addInterface()
         host_iface1.component_id = "eth3"
         host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0")) 
@@ -148,17 +144,8 @@ for nodeName in nodeList:
         lan1.addInterface(host_iface1)
         host_iface1.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+30), "255.255.255.0"))
         host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0"))
-        
-    
-    # lan1.link_multiplexing = True
-    # lan1.best_effort = True
-
-    # lan2.link_multiplexing = True
-    # lan2.best_effort = True
-      
   
-  
-    n_idx = n_idx + 1
+    i+=1
 
 # Print Request RSpec
 pc.printRequestRSpec(request)
