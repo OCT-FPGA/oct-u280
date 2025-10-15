@@ -89,7 +89,7 @@ lan2.link_multiplexing = True
 lan2.best_effort = True
 
 nodeList = params.nodes.split(',')
-i = 0
+n_idx = 0
 for nodeName in nodeList:
     host = request.RawPC(nodeName)
     # UMass cluster
@@ -122,7 +122,7 @@ for nodeName in nodeList:
     # Secret sauce.
     fpga.SubNodeOf(host)
 
-    if i == 0:
+    if n_idx == 0:
         host_iface1 = host.addInterface()
         host_iface1.component_id = "eth3"
         host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0")) 
@@ -145,7 +145,7 @@ for nodeName in nodeList:
         host_iface1.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+30), "255.255.255.0"))
         host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0"))
   
-    i+=1
+    n_idx = n_idx + 1
 
 # Print Request RSpec
 pc.printRequestRSpec(request)
