@@ -13,6 +13,12 @@ install_xrt() {
     sudo bash -c "echo 'source $VITIS_BASE_PATH/$TOOLVERSION/settings64.sh' >> /etc/profile"
 }
 
+install_u280_dev_platform(){
+    echo "Install u280 dev platform"
+    cp $U280_DEV_PLATFORM_PATH/$TOOLVERSION/*.deb /tmp
+    apt install /tmp/xilinx-u280*.deb
+}
+
 install_shellpkg() {
 
 if [[ "$U280" == 0 ]]; then
@@ -133,6 +139,7 @@ XRT_BASE_PATH="/share/tools/u280/deployment/xrt"
 SHELL_BASE_PATH="/share/tools/u280/deployment/shell"
 XBFLASH_BASE_PATH="/share/tools/u280/xbflash"
 VITIS_BASE_PATH="/share/Xilinx/Vitis"
+U280_DEV_PLATFORM_PATH="/share/tools/u280/dev_platform"
 CONFIG_FPGA_PATH="/share/tools/u280/post-boot"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
@@ -175,8 +182,8 @@ fi
 install_libs
 # Disable PCIe fatal error reporting
 disable_pcie_fatal_error 
-
 install_config_fpga
+install_u280_dev_platform
 
 if [ "$WORKFLOW" = "Vitis" ] ; then
     check_shellpkg
