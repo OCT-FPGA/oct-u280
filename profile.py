@@ -122,11 +122,16 @@ for nodeName in nodeList:
     # Secret sauce.
     fpga.SubNodeOf(host)
 
-    if n_idx == 0:
+    if n_idx == 0: #loopback server
         host_iface1 = host.addInterface()
         host_iface1.component_id = "eth2"
-        host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0")) 
+        host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+10), "255.255.255.0"))
+        host_iface2 = host.addInterface()
+        host_iface2.component_id = "eth3"
+        host_iface2.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+20), "255.255.255.0"))
         lan1.addInterface(host_iface1)
+        lan1.addInterface(host_iface2)
+        
         fpga_iface1 = fpga.addInterface()
         fpga_iface1.component_id = "eth0"
         fpga_iface1.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+10), "255.255.255.0"))
@@ -135,15 +140,24 @@ for nodeName in nodeList:
         fpga_iface2.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+20), "255.255.255.0"))
         lan2.addInterface(fpga_iface1)
         lan2.addInterface(fpga_iface2)
-    else:
+    else: #p4 fpga smartnic
         host_iface1 = host.addInterface()
-        # host_iface2 = host.addInterface()
+        host_iface2 = host.addInterface()
         host_iface1.component_id = "eth2"
-        # host_iface2.component_id = "eth3"
-        lan2.addInterface(host_iface1)
-        lan1.addInterface(host_iface1)
+        host_iface2.component_id = "eth3"
         host_iface1.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+30), "255.255.255.0"))
-        host_iface1.addAddress(pg.IPv4Address("192.168.40." + str(n_idx+30), "255.255.255.0"))
+        host_iface2.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+40), "255.255.255.0"))
+        lan2.addInterface(host_iface1)
+        lan2.addInterface(host_iface2)
+
+        fpga_iface1 = fpga.addInterface()
+        fpga_iface1.component_id = "eth0"
+        fpga_iface1.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+50), "255.255.255.0"))
+        fpga_iface2 = fpga.addInterface()
+        fpga_iface2.component_id = "eth1"
+        fpga_iface2.addAddress(pg.IPv4Address("192.168.50." + str(n_idx+60), "255.255.255.0"))
+        lan2.addInterface(fpga_iface1)
+        lan2.addInterface(fpga_iface2)
   
     n_idx = n_idx + 1
 
