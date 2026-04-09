@@ -17,16 +17,14 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 # Pick your image.
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04'),
-             ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
-             ('urn:publicid:IDN+cloudlab.umass.edu+image+octfpga-PG0:oct-u280.pc163.mcs', 'UBUNTU 22.04 +mcs ')] 
+imageList = [('urn:publicid:IDN+cloudlab.umass.edu+image+octfpga-PG0:oct-u280.pc163.mcs', 'UBUNTU 22.04+mcs')] 
 
-workflow = ['Vitis', 'Vivado']
+workflow = ['Vivado']
 
-toolVersion = ['2023.2', '2023.1'] 
+toolVersion = ['2023.2'] 
 
 pc.defineParameter("nodes","List of nodes",
-                   portal.ParameterType.STRING,"",
+                   portal.ParameterType.STRING,"pc162,pc163",
                    longDescription="Comma-separated list of nodes (e.g., pc151,pc153). Please check the list of available nodes within the Mass cluster at https://www.cloudlab.us/cluster-status.php before you specify the nodes.")
                    
 pc.defineParameter("workflow", "Workflow",
