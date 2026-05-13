@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+mount_filesystems() {
+    sudo mkdir -p /fpga/Intel /fpga/Xilinx /fpga/tools
+    sudo mount -t nfs ops.cloudlab.umass.edu:/fpga/tools /fpga/tools
+}
+
 install_xrt() {
     echo "Install XRT"
     if [[ "$OSVERSION" == "ubuntu-20.04" ]] || [[ "$OSVERSION" == "ubuntu-22.04" ]]; then
@@ -10,7 +15,6 @@ install_xrt() {
         apt install -y $XRT_BASE_PATH/$TOOLVERSION/$OSVERSION/$XRT_PACKAGE
     fi
     sudo bash -c "echo 'source /opt/xilinx/xrt/setup.sh' >> /etc/profile"
-    sudo bash -c "echo 'source $VITIS_BASE_PATH/$TOOLVERSION/settings64.sh' >> /etc/profile"
 }
 
 install_u280_dev_platform(){
@@ -132,15 +136,16 @@ install_libs() {
 
 disable_pcie_fatal_error() {
     echo "Disabling PCIe fatal error reporting for node: $NODE_ID"
-    sudo /share/tools/u280/pcie_disable_fatal.sh $PCI_ADDR
+    sudo $BASE_DIR/tools/u280/pcie_disable_fatal.sh $PCI_ADDR
 }
 
-XRT_BASE_PATH="/share/tools/u280/deployment/xrt"
-SHELL_BASE_PATH="/share/tools/u280/deployment/shell"
-XBFLASH_BASE_PATH="/share/tools/u280/xbflash"
-VITIS_BASE_PATH="/share/Xilinx/Vitis"
-U280_DEV_PLATFORM_PATH="/share/tools/u280/dev_platform"
-CONFIG_FPGA_PATH="/share/tools/u280/post-boot"
+BASE_DIR="/fpga"
+XRT_BASE_PATH="$BASE_DIR/tools/u280/deployment/xrt"
+SHELL_BASE_PATH="$BASE_DIR/tools/u280/deployment/shell"
+XBFLASH_BASE_PATH="$BASE_DIR/tools/u280/xbflash"
+VITIS_BASE_PATH="$BASE_DIR/Xilinx/Vitis"
+U280_DEV_PLATFORM_PATH="$BASE_DIR/tools/u280/dev_platform"
+CONFIG_FPGA_PATH="$BASE_DIR/tools/u280/post-boot"
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
@@ -162,6 +167,7 @@ FACTORY_SHELL="xilinx_u280_GOLDEN_8"
 NODE_ID=$(hostname | cut -d'.' -f1)
 #PCI_ADDR=$(lspci -d 10ee: | awk '{print $1}' | head -n 1)
 
+mount_filesystems
 detect_cards
 check_xrt
 if [ $? == 0 ]; then
@@ -179,7 +185,7 @@ else
     fi
 fi
 
-install_libs
+#install_libs
 # Disable PCIe fatal error reporting
 disable_pcie_fatal_error 
 install_config_fpga
