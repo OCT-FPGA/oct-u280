@@ -127,7 +127,7 @@ for nodeName in nodeList:
     
     lan.addInterface(fpga_iface1)
     lan.addInterface(fpga_iface2)
-    lan.addInterface(host_iface1)
+    #lan.addInterface(host_iface1)
     lan.addInterface(host_iface2)
   
     i+=1
