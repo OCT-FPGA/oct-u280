@@ -131,7 +131,7 @@ install_config_fpga() {
 
 install_libs() {
     echo "Installing libs."
-    sudo $VITIS_BASE_PATH/$TOOLVERSION/scripts/installLibs.sh
+    sudo $LIBS_PATH/$TOOLVERSION/installLibs.sh
 }
 
 disable_pcie_fatal_error() {
@@ -140,6 +140,7 @@ disable_pcie_fatal_error() {
 }
 
 BASE_DIR="/fpga"
+LIBS_PATH="$BASE_DIR/tools/u280/libs"
 XRT_BASE_PATH="$BASE_DIR/tools/u280/deployment/xrt"
 SHELL_BASE_PATH="$BASE_DIR/tools/u280/deployment/shell"
 XBFLASH_BASE_PATH="$BASE_DIR/tools/u280/xbflash"
