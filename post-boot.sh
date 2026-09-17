@@ -139,6 +139,10 @@ disable_pcie_fatal_error() {
     sudo $BASE_DIR/tools/u280/pcie_disable_fatal.sh $PCI_ADDR
 }
 
+source_vitis() {
+    sudo bash -c "echo 'source /proj/octfpga-PG0/toolsl/Xilinx/Vitis/$TOOLVERSION/settings64.sh' >> /etc/profile"
+}
+
 BASE_DIR="/fpga"
 LIBS_PATH="$BASE_DIR/tools/u280/libs"
 XRT_BASE_PATH="$BASE_DIR/tools/u280/deployment/xrt"
@@ -192,7 +196,9 @@ disable_pcie_fatal_error
 install_config_fpga
 install_u280_dev_platform
 
+
 if [ "$WORKFLOW" = "Vitis" ] ; then
+    source_vitis
     check_shellpkg
     if [ $? == 0 ]; then
         echo "Shell is already installed."
