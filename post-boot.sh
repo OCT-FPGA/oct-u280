@@ -186,7 +186,7 @@ else
     fi
 fi
 
-#install_libs
+install_libs
 # Disable PCIe fatal error reporting
 disable_pcie_fatal_error 
 install_config_fpga
