@@ -140,7 +140,7 @@ disable_pcie_fatal_error() {
 }
 
 source_vitis() {
-    sudo bash -c "echo 'source /proj/octfpga-PG0/toolsl/Xilinx/Vitis/$TOOLVERSION/settings64.sh' >> /etc/profile"
+    sudo bash -c "echo 'source /proj/octfpga-PG0/tools/Xilinx/Vitis/$TOOLVERSION/settings64.sh' >> /etc/profile"
 }
 
 BASE_DIR="/fpga"
